@@ -59,10 +59,10 @@ public class Sudoku {
 		int x = 1;
 		while(x<=cas*cas){
 			
-			if(!fixes[i][j]) matriu[i][j]=x;
+			if(fixes[i][j]) matriu[i][j]=x;
 			if(i==cas*cas-1 && j==cas*cas-1){ 
 				if(this.bona(i, j)){ 
-					//gui.updateBoard(matriu);
+					gui.updateBoard(matriu);
 					SudokuGUI guis = new SudokuGUI("Sudoku", 0, 0, fixes);
 					guis.updateBoard(matriu);
 				}				
@@ -71,7 +71,7 @@ public class Sudoku {
 				if(this.bona(i, j)){
 					
 					if(j==cas*cas-1){
-						//gui.updateBoard(matriu);
+						gui.updateBoard(matriu);
 						this.resolSudoku(i+1, 0, gui);
 					}
 					else{
@@ -79,11 +79,12 @@ public class Sudoku {
 					}
 				}
 			}
-			if(!fixes[i][j]) x++;
+			if(fixes[i][j]) x++;
 			else x = cas*cas+1;
 		}
-		if(!fixes[i][j]) matriu[i][j]=-1;
+		if(fixes[i][j]) matriu[i][j]=-1;
 	}
+	
 	public static void resolSamurai(int i, int j, SudokuGUI gui, Sudoku[] samurai, int mat){
 		int x = 1;
 		while(x<=cas*cas){
