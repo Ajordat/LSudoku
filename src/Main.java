@@ -10,7 +10,7 @@ public class Main {
 	public static void main(String[] args) throws IOException{		
 		String a;
 		String[] aux;
-		BufferedReader br = new BufferedReader(new FileReader(args[MATRIU9]));
+		BufferedReader br = new BufferedReader(new FileReader(args[MATRIUS]));
 		a = br.readLine();
 		aux = a.split(" ");
 		int[][] matriu = new int[aux.length][aux.length];
@@ -39,6 +39,7 @@ public class Main {
 		SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
 		gui.updateBoard(sudoku.getMatriu());
 		sudoku.resolSudoku(0, 0, gui);
+		sudoku.resolSamurai(0, 0, gui, samurai, 0);
 		gui.updateBoard(sudoku.getMatriu());
 	}
 
