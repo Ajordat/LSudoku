@@ -18,7 +18,7 @@ public class Main {
 		String a;
 		String[] aux;
 		
-		BufferedReader br = new BufferedReader(new FileReader("Sudoku.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("Sudoku2.txt"));
 		a = br.readLine();
 		for(int i=0;a!=null;i++){
 			aux = a.split(" ");

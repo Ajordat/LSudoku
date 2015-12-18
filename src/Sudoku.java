@@ -2,7 +2,7 @@
 public class Sudoku {
 	private int[][] matriu;
 	private boolean[][] fixes;
-	private int cas;
+	private static int cas;
 	
 	public Sudoku(int cas) {
 		super();
@@ -62,6 +62,7 @@ public class Sudoku {
 			if(!fixes[i][j]) matriu[i][j]=x;
 			if(i==cas*cas-1 && j==cas*cas-1){ 
 				if(this.bona(i, j)){ 
+					//gui.updateBoard(matriu);
 					SudokuGUI guis = new SudokuGUI("Sudoku", 0, 0, fixes);
 					guis.updateBoard(matriu);
 				}				
@@ -70,7 +71,7 @@ public class Sudoku {
 				if(this.bona(i, j)){
 					
 					if(j==cas*cas-1){
-						gui.updateBoard(matriu);
+						//gui.updateBoard(matriu);
 						this.resolSudoku(i+1, 0, gui);
 					}
 					else{
@@ -82,6 +83,40 @@ public class Sudoku {
 			else x = cas*cas+1;
 		}
 		if(!fixes[i][j]) matriu[i][j]=-1;
+	}
+	public static void resolSamurai(int i, int j, SudokuGUI gui, Sudoku[] samurai, int mat){
+		int x = 1;
+		while(x<=cas*cas){
+			
+			if(!samurai[mat].fixes[i][j]) samurai[mat].matriu[i][j]=x;
+			if(i==cas*cas-1 && j==cas*cas-1){
+				if(samurai[mat].bona(i, j)){
+					gui.updateBoard(samurai[mat].matriu);
+					if(mat<5){
+						resolSamurai(0, 0, gui, samurai, mat+1);
+					}
+					else{
+						SudokuGUI guis = new SudokuGUI("Sudoku", 0, 0, samurai[mat].fixes);
+						guis.updateBoard(samurai[mat].matriu);
+					}
+				}
+			}
+			else{
+				if(samurai[mat].bona(i, j)){
+					
+					if(j==cas*cas-1){
+						gui.updateBoard(samurai[mat].matriu);
+						resolSamurai(i+1, 0, gui, samurai, mat);
+					}
+					else{
+						resolSamurai(i, j+1, gui, samurai, mat);
+					}
+				}
+			}
+			if(!samurai[mat].fixes[i][j]) x++;
+			else x = cas*cas+1;
+		}
+		if(!samurai[mat].fixes[i][j]) samurai[mat].matriu[i][j]=-1;
 	}
 }
 
