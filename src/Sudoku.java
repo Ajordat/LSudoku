@@ -110,7 +110,6 @@ public class Sudoku {
 			}
 			else{
 				if(samurai[mat].bona(i, j)){
-					
 					if(j==cas*cas-1){
 						gui.updateBoard(samurai[mat].matriu);
 						resolSamurai(i+1, 0, gui, samurai, mat);
@@ -124,6 +123,20 @@ public class Sudoku {
 			else x = cas*cas+1;
 		}
 		if(samurai[mat].fixes[i][j]) samurai[mat].matriu[i][j]=-1;
+	}
+	public Sudoku[] aSamurai(){
+		Sudoku[] samurai = new Sudoku[5];
+		Sudoku aux = new Sudoku(3);
+		int index = 0;
+		for(int i=cas*cas-cas;i<cas;i++){
+			
+		}
+		for(int i=0;i<cas*cas;i++){
+			for(int j=0;j<cas*cas;i++){
+				samurai[index].matriu[i][j]=matriu[i][j];
+			}
+		}
+		return samurai;		
 	}
 }
 

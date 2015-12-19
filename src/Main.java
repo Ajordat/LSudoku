@@ -34,12 +34,18 @@ public class Main {
 			if(a!=null) aux = a.split(" ");
 		}
 		br.close();
-		
-		Sudoku sudoku = new Sudoku(matriu, fixes, (int) Math.sqrt(aux.length));
+		System.out.println(aux.length);
+		int cas;
+		//Sudoku sudoku = new Sudoku(matriu, fixes, (int) Math.sqrt(aux.length));
+		for(cas=1;aux.length!=cas*cas*3-2*cas;cas++);
+		System.out.println(cas);
+		Sudoku sudoku = new Sudoku(matriu, fixes, cas);
 		SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
+		
 		gui.updateBoard(sudoku.getMatriu());
 		sudoku.resolSudoku(0, 0, gui);
-		sudoku.resolSamurai(0, 0, gui, samurai, 0);
+		//Sudoku[] samurai = sudoku.aSamurai();
+		//sudoku.resolSamurai(0, 0, gui, samurai, 0);
 		gui.updateBoard(sudoku.getMatriu());
 	}
 
