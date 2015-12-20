@@ -37,7 +37,6 @@ public class Main {
 		}
 		br.close();
 		
-		int cas;
 		if(!esSamurai){
 			Sudoku sudoku = new Sudoku(matriu, fixes, (int) Math.sqrt(aux.length));
 			SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
@@ -45,8 +44,9 @@ public class Main {
 			sudoku.resolSudoku(0, 0, gui);
 		}else{
 			//Obtenim el nombre de caselles pel samurai
+			int cas;
 			for(cas=1;aux.length!=cas*cas*3-2*cas;cas++);
-			System.out.println(matriu.length);
+
 			//En aquest sudoku hi guardem el que és tot el conjunt dels cinc sudokus
 			Sudoku sudoku = new Sudoku(matriu, fixes, cas);
 			
@@ -56,6 +56,7 @@ public class Main {
 			
 			Samurai samurai = sudoku.setSamurai(cas);
 			samurai.resolSamurai(0, 0, gui, 0);
+			System.out.println("Adeu!");
 		}
 	}
 }
