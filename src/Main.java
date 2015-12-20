@@ -7,10 +7,11 @@ public class Main {
 	public static final int MATRIU9 = 1;
 	public static final int MATRIU16 = 2;
 	public static final int MATRIUS = 3;
+	public static final int PROVA = 4;
 	public static void main(String[] args) throws IOException{		
 		String a;
 		String[] aux;
-		boolean esSamurai = false;
+		boolean esSamurai = false;	
 		BufferedReader br = new BufferedReader(new FileReader(args[MATRIUS]));
 		a = br.readLine();
 		aux = a.split(" ");
@@ -38,6 +39,7 @@ public class Main {
 		br.close();
 		
 		if(!esSamurai){
+			
 			Sudoku sudoku = new Sudoku(matriu, fixes, (int) Math.sqrt(aux.length));
 			SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
 			gui.updateBoard(sudoku.getMatriu());

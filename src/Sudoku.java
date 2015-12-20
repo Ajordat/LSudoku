@@ -54,6 +54,7 @@ public class Sudoku {
 		}
 		return true;
 	}
+	
 	public void resolSudoku(int i, int j, SudokuGUI gui){
 		int x = 1;
 		while(x<=cas*cas){
@@ -68,7 +69,6 @@ public class Sudoku {
 			}
 			else{
 				if(this.bona(i, j)){
-					
 					if(j==cas*cas-1){
 						gui.updateBoard(matriu);
 						this.resolSudoku(i+1, 0, gui);
@@ -83,7 +83,9 @@ public class Sudoku {
 		}
 		if(fixes[i][j]) matriu[i][j]=-1;
 	}
+	
 	public Samurai setSamurai(int cas){
+		//Extracció del sudoku gran a cinc petits de la classe samurai
 		Samurai samurai = new Samurai(cas);
 		Sudoku sudoku = new Sudoku(cas);
 		//Set del sudoku central
@@ -143,6 +145,7 @@ public class Sudoku {
 		}
 		return samurai;
 	}
+	
 }
 
 
