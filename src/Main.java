@@ -10,6 +10,7 @@ public class Main {
 	public static void main(String[] args) throws IOException{		
 		String a;
 		String[] aux;
+		boolean esSamurai = false;
 		BufferedReader br = new BufferedReader(new FileReader(args[MATRIUS]));
 		a = br.readLine();
 		aux = a.split(" ");
@@ -23,6 +24,7 @@ public class Main {
 				}
 				else if(aux[j].charAt(0)=='*'){
 					fixes[i][j] = true;
+					esSamurai = true;
 				}
 				else{
 					fixes[i][j] = false;
@@ -34,19 +36,26 @@ public class Main {
 			if(a!=null) aux = a.split(" ");
 		}
 		br.close();
-		System.out.println(aux.length);
-		int cas;
-		//Sudoku sudoku = new Sudoku(matriu, fixes, (int) Math.sqrt(aux.length));
-		for(cas=1;aux.length!=cas*cas*3-2*cas;cas++);
-		System.out.println(cas);
-		Sudoku sudoku = new Sudoku(matriu, fixes, cas);
-		SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
 		
-		gui.updateBoard(sudoku.getMatriu());
-		sudoku.resolSudoku(0, 0, gui);
-		//Sudoku[] samurai = sudoku.aSamurai();
-		//sudoku.resolSamurai(0, 0, gui, samurai, 0);
-		gui.updateBoard(sudoku.getMatriu());
+		int cas;
+		if(!esSamurai){
+			Sudoku sudoku = new Sudoku(matriu, fixes, (int) Math.sqrt(aux.length));
+			SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
+			gui.updateBoard(sudoku.getMatriu());
+			sudoku.resolSudoku(0, 0, gui);
+		}else{
+			//Obtenim el nombre de caselles pel samurai
+			for(cas=1;aux.length!=cas*cas*3-2*cas;cas++);
+			System.out.println(matriu.length);
+			//En aquest sudoku hi guardem el que és tot el conjunt dels cinc sudokus
+			Sudoku sudoku = new Sudoku(matriu, fixes, cas);
+			
+			//Mostrem la variable sudoku, que recordem és la visió global del samurai
+			SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
+			gui.updateBoard(sudoku.getMatriu());
+			
+			Samurai samurai = sudoku.setSamurai(cas);
+			samurai.resolSamurai(0, 0, gui, 0);
+		}
 	}
-
 }
