@@ -26,38 +26,34 @@ public class Samurai {
 	}
 	
 	public boolean bona(int i, int j, int mat){
-		int indy=0, indx =0;
 		if(mat==0){
+			int indy=0, indx =0;
 			while(indy+cas<=i) indy+=cas;
 			while(indx+cas<=j) indx+=cas;
 			if(indy==0&&indx==0){
-				getSudoku(1).getMatriu()[cas*cas-cas+i][cas*cas-cas+j]=getSudoku(0).getMatriu()[i][j];
-				/*for(int a=0;a<cas*cas;a++){
+				/*if(!this.getSudoku(1).bona(cas*cas-cas+i, cas*cas-cas+j)){
+					return false;
+				}*/
+				for(int a=0;a<cas*cas;a++){
 					if(this.getSudoku(1).getMatriu()[a][cas*cas-cas+j]==this.getSudoku(0).getMatriu()[i][j]){
-						//System.out.println("MOU Y\nRetorna fals a: "+a+"\nA la posició: ("+i+","+j+")");
-						//System.out.println("Pel valor: "+getSudoku(1).getMatriu()[cas*cas-cas+i][cas*cas-cas+j]);
 						if(a!=cas*cas-cas+i){
-							//System.out.println("RETORNA FALS");
 							return false;
 						}
 					}
 				}
 				for(int a=0;a<cas*cas;a++){
 					if(this.getSudoku(1).getMatriu()[cas*cas-cas+i][a]==this.getSudoku(0).getMatriu()[i][j]){
-						//System.out.println("MOU X\nRetorna fals a: "+a+"\nA la posició: ("+i+","+j+")");
-						//System.out.println("Pel valor: "+getSudoku(1).getMatriu()[cas*cas-cas+i][cas*cas-cas+j]);
 						if(a!=cas*cas-cas+j) return false;
 					}
-				}*/
+				}
 			}
 			if(indy==0&&indx==cas*cas-cas){
-				getSudoku(2).getMatriu()[cas*cas-cas+i][cas+j-cas*cas]=getSudoku(0).getMatriu()[i][j];
-				/*for(int a=0;a<cas*cas;a++){
+				/*if(!this.getSudoku(2).bona(cas*cas-cas+i, cas+j-cas*cas)){
+					return false;
+				}*/
+				for(int a=0;a<cas*cas;a++){
 					if(this.getSudoku(2).getMatriu()[a][cas+j-cas*cas]==this.getSudoku(0).getMatriu()[i][j]){
 						if(a!=cas*cas-cas+i){
-							System.out.println("Pos ("+(cas*cas-cas+i)+","+(cas+j-cas*cas)+")\nValor erroni: "+getSudoku(2).getMatriu()[a][cas+j-cas*cas]);
-							Scanner sc = new Scanner(System.in);
-							String asdf = new String(sc.nextLine());
 							return false;
 						}
 					}
@@ -65,17 +61,16 @@ public class Samurai {
 				for(int a=0;a<cas*cas;a++){
 					if(this.getSudoku(2).getMatriu()[cas*cas-cas+i][a]==this.getSudoku(0).getMatriu()[i][j]){
 						if(a!=cas+j-cas*cas){
-							System.out.println("Pos ("+(cas*cas-cas+i)+","+(cas+j-cas*cas)+")\nValor erroni: "+getSudoku(2).getMatriu()[a][cas+j-cas*cas]);
-							Scanner sc = new Scanner(System.in);
-							String asdf = new String(sc.nextLine());
 							return false;
 						}
 					}
-				}*/
+				}
 			}
 			if(indy==cas*cas-cas&&indx==0){
-				getSudoku(3).getMatriu()[cas+i-cas*cas][cas*cas-cas+j]=getSudoku(0).getMatriu()[i][j];
-				/*for(int a=0;a<cas*cas;a++){
+				/*if(!this.getSudoku(3).bona(cas+i-cas*cas, cas*cas-cas+j)){
+					return false;
+				}*/
+				for(int a=0;a<cas*cas;a++){
 					if(this.getSudoku(3).getMatriu()[a][cas*cas-cas+j]==this.getSudoku(0).getMatriu()[i][j]){
 						if(a!=cas+i-cas*cas) return false;
 					}
@@ -84,11 +79,13 @@ public class Samurai {
 					if(this.getSudoku(3).getMatriu()[-cas*cas+cas+i][a]==this.getSudoku(0).getMatriu()[i][j]){
 						if(a!=cas*cas-cas+j) return false;
 					}
-				}*/
+				}
 			}
 			if(indy==cas*cas-cas&&indx==cas*cas-cas){
-				getSudoku(4).getMatriu()[-cas*cas+cas+i][-cas*cas+cas+j]=getSudoku(0).getMatriu()[i][j];
-				/*for(int a=0;a<cas*cas;a++){
+				/*if(!this.getSudoku(4).bona(cas+i-cas*cas, cas+j-cas*cas)){
+					return false;
+				}*/
+				for(int a=0;a<cas*cas;a++){
 					if(this.getSudoku(4).getMatriu()[a][-cas*cas+cas+j]==this.getSudoku(0).getMatriu()[i][j]){
 						if(a!=-cas*cas+cas+i) return false;
 					}
@@ -97,7 +94,7 @@ public class Samurai {
 					if(this.getSudoku(4).getMatriu()[-cas*cas+cas+i][a]==this.getSudoku(0).getMatriu()[i][j]){
 						if(a!=-cas*cas+cas+j) return false;
 					}
-				}*/
+				}
 			}
 		}
 		return samurai[mat].bona(i, j);
@@ -155,7 +152,23 @@ public class Samurai {
 		while(x<=cas*cas){
 			//System.out.println(x);
 			if(samurai[mat].getFixes()[i][j]) samurai[mat].getMatriu()[i][j]=x;
-			
+			if(mat==0){
+				int indy=0, indx=0;
+				while(indy+cas<=i) indy+=cas;
+				while(indx+cas<=j) indx+=cas;
+				if(indy==0&&indx==0){
+					samurai[1].getMatriu()[cas*cas-cas+i][cas*cas-cas+j]=samurai[0].getMatriu()[i][j];
+				}
+				else if(indy==0 && indx == cas*cas-cas){
+					samurai[2].getMatriu()[cas*cas-cas+i][cas+j-cas*cas]=samurai[0].getMatriu()[i][j];
+				}
+				else if(indy==cas*cas-cas && indx==0){
+					getSudoku(3).getMatriu()[cas+i-cas*cas][cas*cas-cas+j]=getSudoku(0).getMatriu()[i][j];
+				}
+				else if(indy==cas*cas-cas&&indx==cas*cas-cas){
+					getSudoku(4).getMatriu()[-cas*cas+cas+i][-cas*cas+cas+j]=getSudoku(0).getMatriu()[i][j];
+				}
+			}
 			if(i==cas*cas-1 && j==cas*cas-1){
 				if(this.bona(i, j, mat)){
 					gui.updateBoard(this.setSudoku().getMatriu());
@@ -186,5 +199,22 @@ public class Samurai {
 			else x = cas*cas+1;
 		}
 		if(samurai[mat].getFixes()[i][j]) samurai[mat].getMatriu()[i][j]=-1;
+		if(mat==0){
+			int indy=0, indx=0;
+			while(indy+cas<=i) indy+=cas;
+			while(indx+cas<=j) indx+=cas;
+			if(indy==0&&indx==0){
+				samurai[1].getMatriu()[cas*cas-cas+i][cas*cas-cas+j]=-1;
+			}
+			else if(indy==0 && indx == cas*cas-cas){
+				samurai[2].getMatriu()[cas*cas-cas+i][cas+j-cas*cas]=-1;
+			}
+			else if(indy==cas*cas-cas && indx==0){
+				getSudoku(3).getMatriu()[cas+i-cas*cas][cas*cas-cas+j]=-1;
+			}
+			else if(indy==cas*cas-cas&&indx==cas*cas-cas){
+				getSudoku(4).getMatriu()[-cas*cas+cas+i][-cas*cas+cas+j]=-1;
+			}
+		}
 	}
 }

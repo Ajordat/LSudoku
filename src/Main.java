@@ -8,6 +8,7 @@ public class Main {
 	public static final int MATRIU16 = 2;
 	public static final int MATRIUS = 3;
 	public static final int PROVA = 4;
+	public static final int MATRIUD = 5;
 	public static void main(String[] args) throws IOException{		
 		String a;
 		String[] aux;
@@ -44,6 +45,7 @@ public class Main {
 			SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes());
 			gui.updateBoard(sudoku.getMatriu());
 			sudoku.resolSudoku(0, 0, gui);
+			gui.updateBoard(sudoku.getMatriu());
 		}else{
 			//Obtenim el nombre de caselles pel samurai
 			int cas;
