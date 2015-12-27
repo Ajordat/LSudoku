@@ -1,14 +1,19 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Sudoku {
 	private int[][] matriu;
 	private boolean[][] fixes;
 	private int cas;
+	private static int solucions;
 	
 	public Sudoku(int cas) {
 		super();
 		matriu = new int[cas*cas][cas*cas];
 		fixes = new boolean[cas*cas][cas*cas];
 		this.cas = cas;
+		solucions=0;
 	}
 
 	public Sudoku(int[][] matriu, boolean[][] fixes, int cas) {
@@ -16,6 +21,7 @@ public class Sudoku {
 		this.matriu = matriu;
 		this.fixes = fixes;
 		this.cas = cas;
+		solucions=0;
 	}
 	
 	public int[][] getMatriu() {
@@ -41,6 +47,14 @@ public class Sudoku {
 		this.cas = cas;
 	}
 	
+	public static int getSolucions(){
+		return solucions;
+	}
+	
+	public void setSolucions(int solucions){
+		Sudoku.solucions=solucions;
+	}
+	
 	public boolean bona(int i, int j){
 		int indx = 0, indy = 0;
 		for(int x=0; x<cas*cas;x++) if(matriu[x][j] == matriu[i][j] && x!=i) return false;
@@ -53,6 +67,92 @@ public class Sudoku {
 			}
 		}
 		return true;
+	}
+	
+	public void printaSudoku(){
+		int indy=0, indx;
+		for(int i=0;i<cas*cas;i++){
+			while(indy+cas<=i) indy+=cas;
+			if(indy!=i)/* System.out.print("| ")*/;
+			else{
+				indx=0;
+				for(int j=0;j<cas*cas;j++){
+					while(indx+cas<=j) indx+=cas;
+					if(j!=0) System.out.print(" ");
+					if(j==indx) System.out.print("+  ");
+					System.out.print("- ");
+				}
+				System.out.println(" +");
+			}
+			indx=0;
+			for(int j=0;j<cas*cas;j++){
+				while(indx+cas<=j) indx+=cas;
+				if(indx==j&&indx!=0) System.out.print(" | ");
+				else if(indx==j) System.out.print("| ");
+				if(this.matriu[i][j]>9) System.out.print(this.matriu[i][j]+" ");
+				if(this.matriu[i][j]<10) System.out.print(" "+this.matriu[i][j]+" ");
+			}
+			System.out.println(" |");
+		}
+		indx=0;
+		for(int j=0;j<cas*cas;j++){
+			while(indx+cas<=j) indx+=cas;
+			if(j!=0) System.out.print(" ");
+			if(j==indx) System.out.print("+  ");
+			System.out.print("- ");
+		}
+		System.out.println(" +");
+	}
+	
+	public void passaAFitxer(String fitxer){
+	    try {
+			PrintWriter printw = new PrintWriter(new FileWriter(fitxer));
+			for(int i=0;i<cas*cas;i++){
+				for(int j=0;j<cas*cas;j++){
+					printw.print(this.matriu[i][j]+" ");
+				}
+				printw.println();
+			}
+			printw.close();
+		} catch (IOException e) {
+			System.out.println("Ts, jefe! Això no tira!");
+		}
+	    
+	}
+	
+	public void resolSudoku(int i, int j, int sortida, String fitxer){
+		int x = 1;
+		while(x<=cas*cas){
+			if(fixes[i][j]) matriu[i][j]=x;
+			if(i==cas*cas-1 && j==cas*cas-1){
+				if(this.bona(i, j)){
+					if(sortida==1){
+						this.printaSudoku();
+					}
+					else if(sortida==2){
+						SudokuGUI guis = new SudokuGUI("Sudoku", 0, 0, fixes);
+						guis.updateBoard(matriu);
+					}
+					else if(sortida==3){
+						this.passaAFitxer(fitxer);
+					}
+					Sudoku.solucions++;
+				}				
+			}
+			else{
+				if(this.bona(i, j)){
+					if(j==cas*cas-1){
+						this.resolSudoku(i+1, 0, sortida, fitxer);
+					}
+					else{
+						this.resolSudoku(i, j+1, sortida, fitxer);
+					}
+				}
+			}
+			if(fixes[i][j]) x++;
+			else x = cas*cas+1;
+		}
+		if(fixes[i][j]) matriu[i][j]=-1;
 	}
 	
 	public void resolSudoku(int i, int j, SudokuGUI gui){
@@ -87,7 +187,7 @@ public class Sudoku {
 	public Samurai setSamurai(int cas){
 		//Extracció del sudoku gran a cinc petits de la classe samurai
 		Samurai samurai = new Samurai(cas);
-		Sudoku sudoku = new Sudoku(cas);
+		//Sudoku sudoku = new Sudoku(cas);
 		//Set del sudoku central
 		for(int i=cas*cas-cas, y=0;i<2*cas*cas-cas;i++, y++){
 			for(int j=cas*cas-cas, x=0;j<2*cas*cas-cas;j++,x++){
