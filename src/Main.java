@@ -1,12 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Scanner;
 
 public class Main {
 	public static final int MATRIU4 = 0;
@@ -18,12 +13,13 @@ public class Main {
 	public static final int MATRIUS2 = 6;
 	public static final int MATRIUCENTRAL = 7;
 	public static final int TEMP = 8;
+	
 	public static void main(String[] args) throws IOException{		
 		String a;
 		String[] aux;
 		boolean esSamurai = false;	
 		//BufferedReader br = new BufferedReader(new FileReader(args[0]));
-		BufferedReader br = new BufferedReader(new FileReader(args[MATRIUCENTRAL]));
+		BufferedReader br = new BufferedReader(new FileReader(args[MATRIUS]));
 		a = br.readLine();
 		aux = a.split(" ");
 		int[][] matriu = new int[aux.length][aux.length];
@@ -50,7 +46,7 @@ public class Main {
 		br.close();
 		
 		//int sortida=Integer.parseInt(args[1]);
-		int sortida=0;
+		int sortida=2;
 		//String fitxer = new String(args[2]);
 		String fitxer = new String("temp.txt");
 		
@@ -73,9 +69,8 @@ public class Main {
 			gui.updateBoard(sudoku.getMatriu());
 			
 			Samurai samurai = sudoku.setSamurai(cas);
-			samurai.printaSamurai();
-			samurai.passaAFitxer(fitxer);
 			samurai.resolSamurai(0, 0, gui, 0, sortida, fitxer);
+			gui.updateBoard(sudoku.getMatriu());
 		}
 		
 		Data data2 = new Data(new GregorianCalendar());
@@ -83,7 +78,7 @@ public class Main {
 		System.out.println("Han pasat: " + data1.transcorregut(data2));
 		if(esSamurai){
 			if(Samurai.getSolucions()==1) System.out.println("El Sudoku Samurai ha tingut una única solució.");
-			System.out.println("El Sudoku Samurai ha tingut "+Samurai.getSolucions()+ " solucions.");
+			else System.out.println("El Sudoku Samurai ha tingut "+Samurai.getSolucions()+ " solucions.");
 		}
 		else{
 			if(Sudoku.getSolucions()==1) System.out.println("El sudoku ha tingut una única solució.");

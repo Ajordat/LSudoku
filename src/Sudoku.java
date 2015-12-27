@@ -154,7 +154,7 @@ public class Sudoku {
 		}
 		if(fixes[i][j]) matriu[i][j]=-1;
 	}
-	
+	/*
 	public void resolSudoku(int i, int j, SudokuGUI gui){
 		int x = 1;
 		while(x<=cas*cas){
@@ -183,7 +183,7 @@ public class Sudoku {
 		}
 		if(fixes[i][j]) matriu[i][j]=-1;
 	}
-	
+	*/
 	public Samurai setSamurai(int cas){
 		//Extracció del sudoku gran a cinc petits de la classe samurai
 		Samurai samurai = new Samurai(cas);
@@ -214,11 +214,16 @@ public class Sudoku {
 				samurai.getSudoku(2).getFixes()[y][x] = fixes[i][j];
 			}
 		}
-		for(int i = cas*cas-cas, y=0;i<cas*cas;i++, y++){
+		for(int i = cas*cas-cas, y=cas*cas-cas;i<cas*cas;i++, y++){
 			for(int j = 2*cas*(cas-1), x=0;j<2*cas*(cas-1)+cas;j++, x++){
 				samurai.getSudoku(2).getFixes()[y][x] = false;
 			}
 		}
+		/*for(int i = cas*cas-cas, y=0;i<cas*cas;i++, y++){
+			for(int j = 2*cas*(cas-1), x=0;j<2*cas*(cas-1)+cas;j++, x++){
+				samurai.getSudoku(2).getFixes()[y][x] = false;
+			}
+		}*/
 		//Set del sudoku inferior esquerre
 		for(int i = 2*cas*(cas-1), y=0;i<3*cas*cas-2*cas;i++, y++){
 			for(int j = 0, x=0;j<cas*cas;j++, x++){
@@ -227,10 +232,15 @@ public class Sudoku {
 			}
 		}
 		for(int i = 2*cas*(cas-1), y=0;i<2*cas*(cas-1)+cas;i++, y++){
-			for(int j = cas*cas-cas, x=0;j<cas*cas;j++, x++){
+			for(int j = cas*cas-cas, x=cas*cas-cas;j<cas*cas;j++, x++){
 				samurai.getSudoku(3).getFixes()[y][x] = false;
 			}
 		}
+		/*for(int i = 2*cas*(cas-1), y=0;i<2*cas*(cas-1)+cas;i++, y++){
+			for(int j = cas*cas-cas, x=0;j<cas*cas;j++, x++){
+				samurai.getSudoku(3).getFixes()[y][x] = false;
+			}
+		}*/
 		//Set del sudoku inferior dret
 		for(int i = 2*cas*(cas-1), y=0;i<3*cas*cas-2*cas;i++, y++){
 			for(int j = 2*cas*(cas-1), x=0;j<3*cas*cas-2*cas;j++, x++){

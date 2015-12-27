@@ -44,45 +44,56 @@ public class Samurai {
 			while(indy+cas<=i) indy+=cas;
 			while(indx+cas<=j) indx+=cas;
 			if(indy==0&&indx==0){
-				this.samurai[1].getMatriu()[6+i][6+j]=samurai[0].getMatriu()[i][j];
-				//if(!this.samurai[1].bona(6+i, 6+j)) return false;
+				for(int a=0;a<cas*cas;a++){
+					if(samurai[1].getMatriu()[a][cas*cas-cas+j]==samurai[0].getMatriu()[i][j]){
+						if(a!=cas*cas-cas+i) return false;
+					}
+				}
+				for(int b=0;b<cas*cas-cas;b++){
+					if(samurai[1].getMatriu()[cas*cas-cas+i][b]==samurai[0].getMatriu()[i][j]){
+						if(b!=cas*cas-cas+j) return false;
+					}
+				}
 			}
 			else if(indy==0&&indx==6){
-				this.samurai[2].getMatriu()[6+i][j-6]=samurai[0].getMatriu()[i][j];
-				//if(!this.samurai[2].bona(6+i, -6+j)) return false;
+				for(int a=0;a<cas*cas;a++){
+					if(samurai[2].getMatriu()[a][-cas*cas+cas+j]==samurai[0].getMatriu()[i][j]){
+						if(a!=cas*cas-cas+i) return false;
+					}
+				}
+				for(int b=0;b<cas*cas-cas;b++){
+					if(samurai[2].getMatriu()[cas*cas-cas+i][b]==samurai[0].getMatriu()[i][j]){
+						if(b!=-cas*cas+cas+j) return false;
+					}
+				}
 			}
 			else if(indy==6&&indx==0){
-				this.samurai[3].getMatriu()[-6+i][j+6]=samurai[0].getMatriu()[i][j];
-				//if(!this.samurai[3].bona(-6+i, 6+j)) return false;
+				for(int a=0;a<cas*cas;a++){
+					if(samurai[3].getMatriu()[a][cas*cas-cas+j]==samurai[0].getMatriu()[i][j]){
+						if(a!=-cas*cas+cas+i) return false;
+					}
+				}
+				for(int b=0;b<cas*cas-cas;b++){
+					if(samurai[3].getMatriu()[-cas*cas+cas+i][b]==samurai[0].getMatriu()[i][j]){
+						if(b!=cas*cas-cas+j) return false;
+					}
+				}
 			}
 			else if(indy==6&&indx==6){
-				this.samurai[4].getMatriu()[-6+i][j-6]=samurai[0].getMatriu()[i][j];
-				//if(!this.samurai[4].bona(-6+i, -6+j)) return false;
+				for(int a=0;a<cas*cas;a++){
+					if(samurai[4].getMatriu()[a][-cas*cas+cas+j]==samurai[0].getMatriu()[i][j]){
+						if(a!=-cas*cas+cas+i) return false;
+					}
+				}
+				for(int b=0;b<cas*cas-cas;b++){
+					if(samurai[4].getMatriu()[-cas*cas+cas+i][b]==samurai[0].getMatriu()[i][j]){
+						if(b!=-cas*cas+cas+j) return false;
+					}
+				}
 			}
 			
 		}
-		if(!samurai[mat].bona(i, j)){
-			/*if(mat==0){
-				int indy=0;
-				int indx=0;
-				while(indy+cas<=i) indy+=cas;
-				while(indx+cas<=j) indx+=cas;
-				if(indy==0&&indx==0){
-					this.samurai[1].getMatriu()[6+i][6+j]=-1;
-				}
-				else if(indy==0&&indx==6){
-					this.samurai[2].getMatriu()[6+i][j-6]=-1;
-				}
-				else if(indy==6&&indx==0){
-					this.samurai[3].getMatriu()[-6+i][j+6]=-1;
-				}
-				else if(indy==6&&indx==6){
-					this.samurai[4].getMatriu()[-6+i][j-6]=-1;
-				}
-			}*/
-			return false;
-		}
-		else return true;
+		return samurai[mat].bona(i, j);
 	}
 	
 	public void printaSamurai(){
@@ -193,35 +204,30 @@ public class Samurai {
 	public void resolSamurai(int i, int j, SudokuGUI gui, int mat, int sortida, String fitxer){
 		int num = 1;
 		while(num<=cas*cas){
-			//System.out.println(x);
-			if(samurai[mat].getFixes()[i][j]) samurai[mat].getMatriu()[i][j]=num;
+			if(samurai[mat].getFixes()[i][j]){
+				samurai[mat].getMatriu()[i][j]=num;
+				if(mat==0){
+					int indy=0;
+					int indx=0;
+					while(indy+cas<=i) indy+=cas;
+					while(indx+cas<=j) indx+=cas;
+					if(indy==0&&indx==0){
+						this.samurai[1].getMatriu()[6+i][6+j]=samurai[0].getMatriu()[i][j];
+					}
+					else if(indy==0&&indx==6){
+						this.samurai[2].getMatriu()[6+i][j-6]=samurai[0].getMatriu()[i][j];
+					}
+					else if(indy==6&&indx==0){
+						this.samurai[3].getMatriu()[-6+i][j+6]=samurai[0].getMatriu()[i][j];
+					}
+					else if(indy==6&&indx==6){
+						this.samurai[4].getMatriu()[-6+i][j-6]=samurai[0].getMatriu()[i][j];
+					}
+				}
+			}
 			
 			if(i==cas*cas-1 && j==cas*cas-1){
 				if(this.bona(i, j, mat)){
-					//gui.updateBoard(this.setSudoku().getMatriu());
-					if(mat==0){
-						//Set del sudoku superior esquerre
-						for(int a=cas*cas-cas, y=0;a<cas*cas;a++,y++){
-							for(int b=cas*cas-cas, x=0;b<cas*cas;b++, x++){
-								samurai[1].getMatriu()[a][b]=samurai[0].getMatriu()[y][x];
-							}
-						}
-						for(int a=cas*cas-cas, y=0;a<cas*cas;a++,y++){
-							for(int b=0, x=cas*cas-cas;b<cas;b++, x++){
-								samurai[2].getMatriu()[a][b]=samurai[0].getMatriu()[y][x];
-							}
-						}
-						for(int a=0, y=cas*cas-cas;a<cas;a++,y++){
-							for(int b=cas*cas-cas, x=0;b<cas*cas;b++, x++){
-								samurai[3].getMatriu()[a][b]=samurai[0].getMatriu()[y][x];
-							}
-						}
-						for(int a=0, y=cas*cas-cas;a<cas;a++,y++){
-							for(int b=0, x=cas*cas-cas;b<cas;b++, x++){
-								samurai[4].getMatriu()[a][b]=samurai[0].getMatriu()[y][x];
-							}
-						}
-					}
 					if(mat<4){
 						gui.updateBoard(this.setSudoku().getMatriu());
 						resolSamurai(0, 0, gui, mat+1, sortida, fitxer);
@@ -231,16 +237,25 @@ public class Samurai {
 							this.printaSamurai();
 						}
 						else if(sortida==2){
+							gui.updateBoard(this.setSudoku().getMatriu());
+							//Sudoku sudoku = this.setSudoku();
+							//sudoku.setSamurai(cas).printaSamurai();
+							SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.setSudoku().getFixes());
+							guis.updateBoard(this.setSudoku().getMatriu());
+							/*
+							System.out.println("Ha entrat al condicional.");
 							Sudoku sudoku = this.setSudoku();
+							System.out.println("Ha creat el sudoku gegant.");
 							SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, sudoku.getFixes());
+							System.out.println("Ha creat el GUI amb els booleans.");
 							guis.updateBoard(sudoku.getMatriu());
+							System.out.println("Ha mostrat la solució per pantalla.");
+							*/
 						}
 						else if(sortida==3){
 							this.passaAFitxer(fitxer);
 						}
 						Samurai.solucions++;
-						SudokuGUI guip = new SudokuGUI("Sudoku", 0, 0, setSudoku().getFixes());
-						guip.updateBoard(this.setSudoku().getMatriu());
 					}
 				}
 			}
@@ -249,8 +264,6 @@ public class Samurai {
 					if(j==cas*cas-1){
 						
 						gui.updateBoard(this.setSudoku().getMatriu());
-						//Scanner sc = new Scanner(System.in);
-						//String asdf = new String(sc.nextLine());
 						resolSamurai(i+1, 0, gui, mat, sortida, fitxer);
 					}
 					else{
@@ -261,7 +274,27 @@ public class Samurai {
 			if(samurai[mat].getFixes()[i][j]) num++;
 			else num = cas*cas+1;
 		}
-		if(samurai[mat].getFixes()[i][j]) samurai[mat].getMatriu()[i][j]=-1;
+		if(samurai[mat].getFixes()[i][j]){
+			samurai[mat].getMatriu()[i][j]=-1;
+			if(mat==0){
+				int indy=0;
+				int indx=0;
+				while(indy+cas<=i) indy+=cas;
+				while(indx+cas<=j) indx+=cas;
+				if(indy==0&&indx==0){
+					this.samurai[1].getMatriu()[6+i][6+j]=-1;
+				}
+				else if(indy==0&&indx==6){
+					this.samurai[2].getMatriu()[6+i][j-6]=-1;
+				}
+				else if(indy==6&&indx==0){
+					this.samurai[3].getMatriu()[-6+i][j+6]=-1;
+				}
+				else if(indy==6&&indx==6){
+					this.samurai[4].getMatriu()[-6+i][j-6]=-1;
+				}
+			}
+		}
 		
 	}
 }

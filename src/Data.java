@@ -1,6 +1,4 @@
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Data {
 	private int dia;
@@ -42,8 +40,8 @@ public class Data {
 	public String toString(){
 		return new String(Integer.toString(dia)+"/"+Integer.toString(mes)+"/"+
 			Integer.toString(any)+" - "+Integer.toString(hora)+":"+
-			Integer.toString(minuts)+":"+Integer.toString(segons)+":"
-			+Integer.toString(milisegons));
+			Integer.toString(minuts)+":"+Integer.toString(segons)+":"+
+			Integer.toString(milisegons));
 	}
 	public String transcorregut(Data a){
 		Data b=new Data();
@@ -61,7 +59,7 @@ public class Data {
 		
 		b.hora=a.hora-this.hora;
 		
-		return Integer.toString(b.hora)+":"+Integer.toString(b.minuts)+":"+Integer.toString(b.segons)+":"
-		+Integer.toString(b.milisegons);
+		return Integer.toString(b.hora)+":"+Integer.toString(b.minuts)+":"+Integer.toString(b.segons)+":"+
+		Integer.toString(b.milisegons);
 	}
 }
