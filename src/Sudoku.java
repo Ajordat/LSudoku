@@ -187,7 +187,6 @@ public class Sudoku {
 	public Samurai setSamurai(int cas){
 		//Extracció del sudoku gran a cinc petits de la classe samurai
 		Samurai samurai = new Samurai(cas);
-		//Sudoku sudoku = new Sudoku(cas);
 		//Set del sudoku central
 		for(int i=cas*cas-cas, y=0;i<2*cas*cas-cas;i++, y++){
 			for(int j=cas*cas-cas, x=0;j<2*cas*cas-cas;j++,x++){
@@ -219,11 +218,6 @@ public class Sudoku {
 				samurai.getSudoku(2).getFixes()[y][x] = false;
 			}
 		}
-		/*for(int i = cas*cas-cas, y=0;i<cas*cas;i++, y++){
-			for(int j = 2*cas*(cas-1), x=0;j<2*cas*(cas-1)+cas;j++, x++){
-				samurai.getSudoku(2).getFixes()[y][x] = false;
-			}
-		}*/
 		//Set del sudoku inferior esquerre
 		for(int i = 2*cas*(cas-1), y=0;i<3*cas*cas-2*cas;i++, y++){
 			for(int j = 0, x=0;j<cas*cas;j++, x++){
@@ -236,11 +230,6 @@ public class Sudoku {
 				samurai.getSudoku(3).getFixes()[y][x] = false;
 			}
 		}
-		/*for(int i = 2*cas*(cas-1), y=0;i<2*cas*(cas-1)+cas;i++, y++){
-			for(int j = cas*cas-cas, x=0;j<cas*cas;j++, x++){
-				samurai.getSudoku(3).getFixes()[y][x] = false;
-			}
-		}*/
 		//Set del sudoku inferior dret
 		for(int i = 2*cas*(cas-1), y=0;i<3*cas*cas-2*cas;i++, y++){
 			for(int j = 2*cas*(cas-1), x=0;j<3*cas*cas-2*cas;j++, x++){

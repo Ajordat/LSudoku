@@ -1,6 +1,7 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class Samurai {
 	private Sudoku[] samurai;
@@ -96,10 +97,21 @@ public class Samurai {
 		return samurai[mat].bona(i, j);
 	}
 	
+	public void printaFixes(){
+		Sudoku sudoku = this.setSudoku();
+		for(int i=0;i<3*cas*cas-2*cas;i++){
+			for(int j=0;j<3*cas*cas-2*cas;j++){
+				if(sudoku.getFixes()[i][j]) System.out.print("T ");
+				else System.out.print("F ");
+			}
+			System.out.println();
+		}
+	}
+	
 	public void printaSamurai(){
 		Sudoku sudoku = this.setSudoku();
 		int indx, indy=0;
-		System.out.println(cas);
+		//System.out.println(cas);
 		for(int i=0;i<3*cas*cas-2*cas;i++){
 			while(indy+cas<=i) indy+=cas;
 			if(indy==i){
@@ -108,29 +120,38 @@ public class Samurai {
 					while(indx+cas<=j) indx+=cas;
 					if(j!=0) System.out.print(" ");
 					if(j==indx) System.out.print("+  ");
-					System.out.print("- ");
+					if(j>=cas*cas&&j<2*cas*cas-2*cas&&(i<cas*cas-cas||i>2*cas*cas-cas)) System.out.print("  ");
+					else System.out.print("- ");
 				}
 				System.out.println(" +");
 			}
 			indx=0;
 			for(int j=0;j<3*cas*cas-2*cas;j++){
 				while(indx+cas<=j) indx+=cas;
-				if(indx==j&&indx!=0) System.out.print(" | ");
-				else if(indx==j) System.out.print("| ");
-				if(sudoku.getMatriu()[i][j]==0) System.out.print(" * ");
+				if(indx==j&&indx!=0){
+					if(i>=cas*cas&&i<2*cas*cas-2*cas&&(j<cas*cas-cas||j>2*cas*cas-cas)) System.out.print("   ");
+					else System.out.print(" | ");
+				}
+				else if(indx==j){
+					if(i>=cas*cas&&i<2*cas*cas-2*cas) System.out.print("  ");
+					else System.out.print("| ");
+				}
+				if(sudoku.getMatriu()[i][j]==0) System.out.print("   ");
 				else if(sudoku.getMatriu()[i][j]>9) 
 					System.out.print(sudoku.getMatriu()[i][j]+" ");
 				else if(sudoku.getMatriu()[i][j]==-1) System.out.print(" - ");
 				else System.out.print(" "+sudoku.getMatriu()[i][j]+" ");
 			}
-			System.out.println(" |");
+			if(i>=cas*cas&&i<2*cas*cas-2*cas) System.out.println();
+			else System.out.println(" |");
 		}
 		indx=0;
 		for(int j=0;j<3*cas*cas-2*cas;j++){
 			while(indx+cas<=j) indx+=cas;
 			if(j!=0) System.out.print(" ");
 			if(j==indx) System.out.print("+  ");
-			System.out.print("- ");
+			if(j>=cas*cas&&j<2*cas*cas-2*cas) System.out.print("  ");
+			else System.out.print("- ");
 		}
 		System.out.println(" +");
 	}
@@ -240,8 +261,11 @@ public class Samurai {
 							gui.updateBoard(this.setSudoku().getMatriu());
 							//Sudoku sudoku = this.setSudoku();
 							//sudoku.setSamurai(cas).printaSamurai();
+							//this.printaFixes();
 							SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.setSudoku().getFixes());
 							guis.updateBoard(this.setSudoku().getMatriu());
+							//Scanner sc = new Scanner(System.in);
+							//sc.nextLine();
 							/*
 							System.out.println("Ha entrat al condicional.");
 							Sudoku sudoku = this.setSudoku();

@@ -46,7 +46,7 @@ public class Main {
 		br.close();
 		
 		//int sortida=Integer.parseInt(args[1]);
-		int sortida=2;
+		int sortida=1;
 		//String fitxer = new String(args[2]);
 		String fitxer = new String("temp.txt");
 		
