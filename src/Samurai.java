@@ -233,16 +233,16 @@ public class Samurai {
 					while(indy+cas<=i) indy+=cas;
 					while(indx+cas<=j) indx+=cas;
 					if(indy==0&&indx==0){
-						this.samurai[1].getMatriu()[6+i][6+j]=samurai[0].getMatriu()[i][j];
+						this.samurai[1].getMatriu()[cas*cas-cas+i][cas*cas-cas+j]=samurai[0].getMatriu()[i][j];
 					}
-					else if(indy==0&&indx==6){
-						this.samurai[2].getMatriu()[6+i][j-6]=samurai[0].getMatriu()[i][j];
+					else if(indy==0&&indx==cas*cas-cas){
+						this.samurai[2].getMatriu()[cas*cas-cas+i][j-cas*cas+cas]=samurai[0].getMatriu()[i][j];
 					}
-					else if(indy==6&&indx==0){
-						this.samurai[3].getMatriu()[-6+i][j+6]=samurai[0].getMatriu()[i][j];
+					else if(indy==cas*cas-cas&&indx==0){
+						this.samurai[3].getMatriu()[-cas*cas+cas+i][j+cas*cas-cas]=samurai[0].getMatriu()[i][j];
 					}
-					else if(indy==6&&indx==6){
-						this.samurai[4].getMatriu()[-6+i][j-6]=samurai[0].getMatriu()[i][j];
+					else if(indy==cas*cas-cas&&indx==cas*cas-cas){
+						this.samurai[4].getMatriu()[-cas*cas+cas+i][j-cas*cas+cas]=samurai[0].getMatriu()[i][j];
 					}
 				}
 			}
