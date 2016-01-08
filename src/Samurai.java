@@ -51,13 +51,18 @@ public class Samurai {
 	//Mètodes
 	
 	public boolean bona(int i, int j, int mat) {
-		if (mat == 0) {
-			int indy = 0;
-			int indx = 0;
+		//Funció que retorna cert o fals segons el valor en la posició designada de la matriu que ens diuen
+		//està corractament situat o no. 
+		if (mat == 0) {		//Si la posició que ens passen és del sudoku central i en una de les caselles 
+			int indy = 0;	//que té sobreposada amb algun altre sudoku, comprovem també que el valor 
+			int indx = 0;	//sigui vàlid pels dos sudokus.
 			while (indy + cas <= i) indy += cas;
 			while (indx + cas <= j) indx += cas;
-			if (indy == 0 && indx == 0) {
-				for (int a = 0; a < cas * cas; a++) {
+			//Si la posició que ens passen està dintre d'una d'aquestes caselles comprovem que el valor
+			//no estigui ja ni en la fila ni el la columna de l'altre sudoku, no comprovem la casella ja
+			//que ho fem posteriorment
+			if (indy == 0 && indx == 0) {				
+				for (int a = 0; a < cas * cas; a++) {	
 					if (samurai[1].getMatriu()[a][cas * cas - cas + j] == samurai[0].getMatriu()[i][j]) {
 						if (a != cas * cas - cas + i) return false;
 					}
@@ -108,18 +113,8 @@ public class Samurai {
 		return samurai[mat].bona(i, j);
 	}
 	
-	public void printaFixes() {
-		Sudoku sudoku = this.setSudoku();
-		for (int i = 0; i < 3 * cas * cas - 2 * cas; i++) {
-			for (int j = 0; j < 3 * cas * cas - 2 * cas; j++) {
-				if (sudoku.getFixes()[i][j]) System.out.print ("T ");
-				else System.out.print ("F ");
-			}
-			System.out.println();
-		}
-	}
-	
 	public void printaSamurai() {
+		//Procediment que s'encarrega de dibuixar al terminal un samurai 
 		Sudoku sudoku = this.setSudoku();
 		int indx, indy = 0;
 
@@ -170,6 +165,8 @@ public class Samurai {
 	}
 	
 	public void passaAFitxer(String fitxer) {
+		//Procediment que s'encarrega d'escriure en un fitxer el samurai segons el format que 
+		//s'especifica a l'enunciat
 	    try {
 	    	Sudoku sudoku = this.setSudoku();
 			PrintWriter printw = new PrintWriter(new FileWriter(fitxer) );
@@ -189,6 +186,7 @@ public class Samurai {
 	}
 	
 	public Sudoku setSudoku(){
+		//Funció que retorna un sudoku "gegant" a partir del samurai. S'utilitza per poder fer ús de la GUI
 		Sudoku sudoku = new Sudoku(cas * (3 * cas - 2) );
 		
 		for (int i = 0; i < sudoku.getMatriu().length; i++) {
@@ -236,27 +234,33 @@ public class Samurai {
 	}
 	
 	public void resolSamurai(int i, int j, int mat, int sortida, String fitxer) {
+		//Crida recursiva que resol un sudoku. El que fem és començar per la posició [0][0] del sudoku
+		//central i ens anem desplaçant per la fila en la que ens trobem, un cop hem acabat una fila, 
+		//anem al principi de la següent i així fins que arribem a l'últim element d'un dels sudokus
+		//que és el [cas*cas-1][cas*cas-1] (del sudoku individual). Un cop hem acabat amb un sudoku
+		//passem al següent en el següent ordre: central -> superior esquerre -> superior dret ->
+		//inferior esquerre -> inferior dret
 		int num = 1;
-		while (num <= cas * cas) {
-			if (samurai[mat].getFixes()[i][j]) {
+		while (num <= cas * cas) {	//Mentre no haguem provat totes les combinacions de l'element
+			if (samurai[mat].getFixes()[i][j]) {	//Si la posició no és fixa, en modifiquem el valor
 				samurai[mat].getMatriu()[i][j] = num;
-				if (mat == 0) {
-					int indy = 0;
-					int indx = 0;
+				if (mat == 0) {		//Si a més a més de no ser fixa estem al sudoku central en una de les caselles que es sobreposa, hi fiquem
+					int indy = 0;	//en l'altre el valor nou (cal a dir que les caselles compartides són fixes per tots els sudokus excepte
+					int indx = 0;	//el central).
 					while (indy + cas <= i) indy += cas;
 					while (indx + cas <= j) indx += cas;
-					if (indy == 0 && indx == 0) {
+					if (indy == 0 && indx == 0) 
 						this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = samurai[0].getMatriu()[i][j];
-					}
-					else if (indy == 0 && indx == cas * cas - cas) {
+					
+					else if (indy == 0 && indx == cas * cas - cas) 
 						this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = samurai[0].getMatriu()[i][j];
-					}
-					else if (indy == cas * cas - cas && indx == 0) {
+					
+					else if (indy == cas * cas - cas && indx == 0) 
 						this.samurai[3].getMatriu()[cas - cas * cas + i][j + cas * cas - cas] = samurai[0].getMatriu()[i][j];
-					}
-					else if (indy == cas * cas - cas && indx == cas * cas - cas) {
+					
+					else if (indy == cas * cas - cas && indx == cas * cas - cas) 
 						this.samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = samurai[0].getMatriu()[i][j];
-					}
+					
 				}
 			}
 			

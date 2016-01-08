@@ -84,8 +84,8 @@ public class Sudoku {
 		
 		//Comprovació de si l'element ja està repetit en alguna posició del recuadre en el que es troba
 		int indx = 0, indy = 0;
-		while (indy + cas <= i) indy += cas;
-		while (indx + cas <= j) indx += cas;
+		while (indy + cas <= i) indy += cas;	//Amb aquests dos "while" el que fem és trobar la posició
+		while (indx + cas <= j) indx += cas;	//de dalt a l'esquerra de la casella en la que ens trobem
 		for (int a = indy; a < indy + cas; a++) {
 			for (int b = indx; b < indx + cas; b++) {
 				if (matriu[a][b] == matriu[i][j] && i != a && j != b) return false;

@@ -65,21 +65,21 @@ public class Data {
 			b.segons--;
 			b.milisegons += 1000;
 		}
-		if (this.milisegons < a.milisegons) b.segons++;
+		else if (this.milisegons < a.milisegons&&a.segons - this.segons<0) b.segons++;
 		
 		b.segons += a.segons - this.segons;
 		if (this.segons > a.segons) {
 			b.minuts--;
 			b.segons += 60;
 		}
-		if (this.segons < a.segons) b.minuts++;
+		else if ((this.segons < a.segons)&&a.minuts-this.minuts<0) b.minuts++;
 		
 		b.minuts += a.minuts - this.minuts;
 		if (this.minuts > a.minuts){
 			b.hora--;
 			b.minuts += 60;
 		}
-		if (this.minuts > a.minuts) b.hora++;
+		else if (this.minuts < a.minuts&&a.hora-this.hora<0) b.hora++;
 		
 		b.hora += a.hora - this.hora;
 		
