@@ -77,11 +77,7 @@ public class Sudoku {
 	public boolean bona(int i, int j){
 		//Funció que retorna cert o fals segons segons si l'element a la posició que ens passen pels 
 		//paràmetres està ben situat
-		
-		//Comprovació de si l'element ja està repetit en algun fila o columna
-		for (int x = 0; x < cas * cas; x++) if (matriu[x][j] == matriu[i][j] && x != i) return false;
-		for (int x = 0; x < cas * cas; x++) if (matriu[i][x] == matriu[i][j] && x != j) return false;
-		
+				
 		//Comprovació de si l'element ja està repetit en alguna posició del recuadre en el que es troba
 		int indx = 0, indy = 0;
 		while (indy + cas <= i) indy += cas;	//Amb aquests dos "while" el que fem és trobar la posició
@@ -93,6 +89,7 @@ public class Sudoku {
 		}
 		return true;
 	}
+	
 	
 	public void printaSudoku() {
 		//Procediment que s'encarrega de pintar a la consola el sudoku que el crida
@@ -148,64 +145,23 @@ public class Sudoku {
 	    
 	}
 	
-	public void resolSudoku(int i, int j, int sortida, String fitxer) {
-		//Crida recursiva que resol un sudoku. El que fem és començar per la casella al [0][0]
-		//i ens anem desplaçant per la fila en la que ens trobem, un cop hem acabat una fila, 
-		//anem al principi de la següent i així fins que arribem a l'últim element del sudoku
-		//que és el [cas*cas-1][cas*cas-1]. 
-		//Cal dir que aquest mètode es coneix com a backtracking i el que fem és que no avançem al 
-		//següent element fins que no trobem un valor bo per la posició en la que ens trobem i si 
-		//no en trobem anirem enrrere fins que trobem un valor nou vàlid i continuarem avançant.
-		
-		int x = 1;
-		
-		while (x <= cas * cas) {	//Mentre no haguem provat totes les combinacions de l'element
-			
-			if (fixes[i][j]) matriu[i][j] = x;	//Si l'element es pot modificar, es modifica
-			
-			if (i == cas * cas - 1 && j == cas * cas - 1) {	//Si ens trobem a l'últim element del sudoku
-				
-				if (this.bona(i, j) ) {		//Si estem a l'última casella i és bona, mostrarem la sortida
-					if (sortida == 1) {		//segons se'ns hagi indicat prèviament
-						this.printaSudoku();
-					}
-					else if (sortida == 2) {
-						SudokuGUI guis = new SudokuGUI("Sudoku", 0, 0, fixes);
-						guis.updateBoard(matriu);
-					}
-					else if (sortida == 3) {
-						this.passaAFitxer(fitxer);
-					}
-					Sudoku.solucions++;
-				}
-			}
-			else {
-				if (this.bona(i, j) ) {		//Si el valor que donem a la posició en la que ens trobem
-											//és vàlid passem a la següent posició, que serà la següent
-											//columna de la mateixa fila o la primera columna de la fila
-											//següent
-					if (j == cas * cas - 1) {
-						this.resolSudoku(i+1, 0, sortida, fitxer);
-					}
-					else {
-						this.resolSudoku(i, j+1, sortida, fitxer);
-					}
-				}
-			}
-			if (fixes[i][j]) x++;	//Si es pot modificar, modifiquem, sinó directament sortim del bucle
-			else x = cas * cas + 1;
-		}
-		if (fixes[i][j]) matriu[i][j] = - 1;
-	}
-	
-	public void resolSudoku(int i, int j, int sortida, String fitxer, SudokuGUI gui) {
-			//Aquest procediment fa exactament el mateix que el procediment explicat anteriorment
-			//amb la diferencia que aquest mostra l'estat de resolució del sudoku a mesura que avança
+	public void resolSudoku(int i, int j, int sortida, String fitxer, SudokuGUI gui, Marcatge marca) {
+		//Aquest procediment fa exactament el mateix que el procediment explicat anteriorment
+		//amb la diferencia que aquest mostra l'estat de resolució del sudoku a mesura que avança
 		int x = 1;
 		while (x <= cas * cas) {
-			if (fixes[i][j]) matriu[i][j] = x;
+			if (fixes[i][j]){
+				while(x<=cas*cas&&(marca.getFiles()[i][x-1]||marca.getColumnes()[j][x-1])) x++;
+				if(x==cas*cas+1){
+					matriu[i][j] = - 1;
+					return;
+				}
+				matriu[i][j] = x;
+				marca.getFiles()[i][x-1]=true;
+				marca.getColumnes()[j][x-1]=true;
+			}
 			if (i == cas * cas - 1 && j == cas * cas - 1) {
-				if (this.bona(i, j) ) {
+				if (this.bona(i, j/*, marca*/) ) {
 					gui.updateBoard(this.matriu);
 					if (sortida == 1) {
 						this.printaSudoku();
@@ -221,18 +177,71 @@ public class Sudoku {
 				}				
 			}
 			else {
-				if (this.bona(i, j) ) {
+				if (this.bona(i, j/*, marca*/) ) {
 					if (j == cas * cas - 1) {
 						gui.updateBoard(this.matriu);	//Actualitzem l'interfície quan tenim una
 														//línia resolta
-						this.resolSudoku(i + 1, 0, sortida, fitxer, gui);
+						this.resolSudoku(i + 1, 0, sortida, fitxer, gui, marca);
 					}
 					else {
-						this.resolSudoku(i, j + 1, sortida, fitxer, gui);
+						this.resolSudoku(i, j + 1, sortida, fitxer, gui, marca);
 					}
 				}
 			}
-			if (fixes[i][j]) x++;
+			if (fixes[i][j]){
+				marca.getFiles()[i][x-1]=false;
+				marca.getColumnes()[j][x-1]=false;
+				x++;
+			}
+			else x = cas * cas + 1;
+		}
+		if (fixes[i][j]) matriu[i][j] = - 1;
+	}
+	public void resolSudoku(int i, int j, int sortida, String fitxer, Marcatge marca) {
+		//Aquest procediment fa exactament el mateix que el procediment explicat anteriorment
+		//amb la diferencia que aquest mostra l'estat de resolució del sudoku a mesura que avança
+		int x = 1;
+		while (x <= cas * cas) {
+			if (fixes[i][j]){
+				while(x<=cas*cas&&(marca.getFiles()[i][x-1]||marca.getColumnes()[j][x-1])) x++;
+				if(x==cas*cas+1){
+					matriu[i][j] = - 1;
+					return;
+				}
+				matriu[i][j] = x;
+				marca.getFiles()[i][x-1]=true;
+				marca.getColumnes()[j][x-1]=true;
+			}
+			if (i == cas * cas - 1 && j == cas * cas - 1) {
+				if (this.bona(i, j/*, marca*/) ) {
+					if (sortida == 1) {
+						this.printaSudoku();
+					}
+					else if (sortida == 2) {
+						SudokuGUI guis = new SudokuGUI("Sudoku", 0, 0, fixes);
+						guis.updateBoard(matriu);
+					}
+					else if (sortida == 3) {
+						this.passaAFitxer(fitxer);
+					}
+					Sudoku.solucions++;
+				}				
+			}
+			else {
+				if (this.bona(i, j/*, marca*/) ) {
+					if (j == cas * cas - 1) {
+						this.resolSudoku(i + 1, 0, sortida, fitxer, marca);
+					}
+					else {
+						this.resolSudoku(i, j + 1, sortida, fitxer, marca);
+					}
+				}
+			}
+			if (fixes[i][j]){
+				marca.getFiles()[i][x-1]=false;
+				marca.getColumnes()[j][x-1]=false;
+				x++;
+			}
 			else x = cas * cas + 1;
 		}
 		if (fixes[i][j]) matriu[i][j] = - 1;
@@ -243,7 +252,11 @@ public class Sudoku {
 		//cinc sudokus petits que es guardaran a un objecte de la classe Samurai
 		
 		Samurai samurai = new Samurai(cas);
-		
+		samurai.getSudoku(0).setCas(cas);
+		samurai.getSudoku(1).setCas(cas);
+		samurai.getSudoku(2).setCas(cas);
+		samurai.getSudoku(3).setCas(cas);
+		samurai.getSudoku(4).setCas(cas);
 		//Set del sudoku central
 		for (int i = cas * cas - cas, y = 0; i < 2 * cas * cas - cas; i++, y++) {
 			for (int j = cas * cas - cas, x = 0; j < 2 * cas * cas - cas; j++,x++) {
@@ -251,7 +264,6 @@ public class Sudoku {
 				samurai.getSudoku(0).getFixes()[y][x] = fixes[i][j];
 			}
 		}
-		
 		//Set del sudoku superior esquerre
 		//Fem que la casella d'abaix a la dreta tingui els elements fixes
 		for (int i = 0; i < cas * cas; i++) {
@@ -265,7 +277,6 @@ public class Sudoku {
 				samurai.getSudoku(1).getFixes()[i][j] = false;
 			}
 		}
-		
 		//Set del sudoku superior dret
 		//Fem que la casella d'abaix a l'esquerra tingui els elements fixes
 		for (int i = 0, y = 0; i < cas * cas; i++, y++) {
@@ -309,6 +320,16 @@ public class Sudoku {
 		}
 		
 		return samurai;
+	}
+	
+	public static void printaFixes(boolean[][] a){
+		for(int i=0;i<9;i++){
+			for(int j=0;j<9;j++){
+				if(a[i][j]) System.out.print("T ");
+				else System.out.print("F ");
+			}
+			System.out.println();
+		}
 	}
 	
 }

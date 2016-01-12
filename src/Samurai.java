@@ -50,69 +50,13 @@ public class Samurai {
 	
 	//Mètodes
 	
+	
 	public boolean bona(int i, int j, int mat) {
 		//Funció que retorna cert o fals segons el valor en la posició designada de la matriu que ens diuen
 		//està corractament situat o no. 
-		if (mat == 0) {		//Si la posició que ens passen és del sudoku central i en una de les caselles 
-			int indy = 0;	//que té sobreposada amb algun altre sudoku, comprovem també que el valor 
-			int indx = 0;	//sigui vàlid pels dos sudokus.
-			while (indy + cas <= i) indy += cas;
-			while (indx + cas <= j) indx += cas;
-			//Si la posició que ens passen està dintre d'una d'aquestes caselles comprovem que el valor
-			//no estigui ja ni en la fila ni el la columna de l'altre sudoku, no comprovem la casella ja
-			//que ho fem posteriorment
-			if (indy == 0 && indx == 0) {				
-				for (int a = 0; a < cas * cas; a++) {	
-					if (samurai[1].getMatriu()[a][cas * cas - cas + j] == samurai[0].getMatriu()[i][j]) {
-						if (a != cas * cas - cas + i) return false;
-					}
-				}
-				for (int b = 0; b < cas * cas - cas; b++) {
-					if (samurai[1].getMatriu()[cas * cas - cas + i][b] == samurai[0].getMatriu()[i][j]) {
-						if (b != cas * cas - cas + j) return false;
-					}
-				}
-			}
-			else if (indy == 0 && indx == cas * cas - cas) {
-				for (int a = 0; a < cas * cas; a++) {
-					if (samurai[2].getMatriu()[a][cas - cas * cas + j] == samurai[0].getMatriu()[i][j]) {
-						if (a != cas * cas - cas + i) return false;
-					}
-				}
-				for (int b = 0; b < cas * cas - cas; b++) {
-					if (samurai[2].getMatriu()[cas * cas - cas + i][b] == samurai[0].getMatriu()[i][j]) {
-						if (b != cas - cas * cas + j) return false;
-					}
-				}
-			}
-			else if (indy == cas * cas - cas && indx == 0) {
-				for (int a = 0; a < cas * cas; a++) {
-					if (samurai[3].getMatriu()[a][cas * cas - cas + j] == samurai[0].getMatriu()[i][j]) {
-						if (a != cas - cas * cas + i) return false;
-					}
-				}
-				for (int b = 0; b < cas * cas - cas; b++) {
-					if (samurai[3].getMatriu()[cas - cas * cas + i][b] == samurai[0].getMatriu()[i][j]) {
-						if (b != cas * cas - cas + j) return false;
-					}
-				}
-			}
-			else if (indy == cas * cas - cas && indx == cas * cas - cas) {
-				for (int a = 0; a < cas * cas; a++) {
-					if (samurai[4].getMatriu()[a][cas - cas * cas + j] == samurai[0].getMatriu()[i][j]) {
-						if (a != cas - cas * cas + i) return false;
-					}
-				}
-				for (int b = 0; b < cas * cas - cas; b++) {
-					if (samurai[4].getMatriu()[cas - cas * cas + i][b] == samurai[0].getMatriu()[i][j]) {
-						if (b != cas - cas * cas + j) return false;
-					}
-				}
-			}
-		}
-		return samurai[mat].bona(i, j);
+		
+		return samurai[mat].bona(i, j/*, marca[mat]*/);
 	}
-	
 	public void printaSamurai() {
 		//Procediment que s'encarrega de dibuixar al terminal un samurai 
 		Sudoku sudoku = this.setSudoku();
@@ -233,7 +177,8 @@ public class Samurai {
 		return sudoku;
 	}
 	
-	public void resolSamurai(int i, int j, int mat, int sortida, String fitxer) {
+	
+	public void resolSamurai(int i, int j, int mat, int sortida, String fitxer, Marcatge[] marca) {
 		//Crida recursiva que resol un sudoku. El que fem és començar per la posició [0][0] del sudoku
 		//central i ens anem desplaçant per la fila en la que ens trobem, un cop hem acabat una fila, 
 		//anem al principi de la següent i així fins que arribem a l'últim element d'un dels sudokus
@@ -243,38 +188,84 @@ public class Samurai {
 		int num = 1;
 		while (num <= cas * cas) {	//Mentre no haguem provat totes les combinacions de l'element
 			if (samurai[mat].getFixes()[i][j]) {	//Si la posició no és fixa, en modifiquem el valor
-				samurai[mat].getMatriu()[i][j] = num;
-				if (mat == 0) {		//Si a més a més de no ser fixa estem al sudoku central en una de les caselles que es sobreposa, hi fiquem
+				
+				if (mat != 0) while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) num++;
+				else{				//Si a més a més de no ser fixa estem al sudoku central en una de les caselles que es sobreposa, hi fiquem
 					int indy = 0;	//en l'altre el valor nou (cal a dir que les caselles compartides són fixes per tots els sudokus excepte
 					int indx = 0;	//el central).
 					while (indy + cas <= i) indy += cas;
 					while (indx + cas <= j) indx += cas;
-					if (indy == 0 && indx == 0) 
-						this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = samurai[0].getMatriu()[i][j];
-					
-					else if (indy == 0 && indx == cas * cas - cas) 
-						this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = samurai[0].getMatriu()[i][j];
-					
-					else if (indy == cas * cas - cas && indx == 0) 
-						this.samurai[3].getMatriu()[cas - cas * cas + i][j + cas * cas - cas] = samurai[0].getMatriu()[i][j];
-					
-					else if (indy == cas * cas - cas && indx == cas * cas - cas) 
-						this.samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = samurai[0].getMatriu()[i][j];
-					
+					if(indy==0 && indx==0){ 
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[1].getFiles()[cas * cas - cas + i][num-1]
+							||marca[1].getColumnes()[cas * cas - cas + j][num-1])) 
+							num++;
+						if(num != cas*cas+1){
+							marca[1].getFiles()[cas * cas - cas + i][num-1]=true;
+							marca[1].getColumnes()[cas * cas - cas + j][num-1]=true;
+							samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = num;
+						}
+					}
+					else if (indy == 0 && indx == cas * cas - cas){
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[2].getFiles()[cas * cas - cas + i][num-1]
+							||marca[2].getColumnes()[j - cas * cas + cas][num-1])){
+							num++;
+						}
+						if(num != cas*cas+1){
+							marca[2].getFiles()[cas * cas - cas + i][num-1]=true;
+							marca[2].getColumnes()[j - cas * cas + cas][num-1]=true;
+							samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = num;
+						}
+					}
+					else if (indy == cas * cas - cas && indx == 0){
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[3].getFiles()[cas - cas * cas + i][num-1]
+							||marca[3].getColumnes()[j + cas * cas - cas][num-1]))
+							num++;
+						if(num != cas*cas+1){
+							marca[3].getFiles()[cas - cas * cas + i][num-1]=true;
+							marca[3].getColumnes()[cas * cas - cas + j][num-1]=true;
+							samurai[3].getMatriu()[cas - cas * cas + i][cas * cas - cas + j] = num;
+						}
+					}
+					else if (indy == cas * cas - cas && indx == cas * cas - cas){
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[4].getFiles()[cas - cas * cas + i][num-1]
+							||marca[4].getColumnes()[j - cas * cas + cas][num-1]))
+							num++;
+						if(num != cas*cas+1){
+							marca[4].getFiles()[cas - cas * cas + i][num-1]=true;
+							marca[4].getColumnes()[j - cas * cas + cas][num-1]=true;
+							samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = num;
+						}
+					}
+					else{
+						while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) 
+							num++;
+					}
 				}
+				if(num==cas*cas+1){
+					samurai[mat].getMatriu()[i][j] = -1;
+					return;
+				}
+				samurai[mat].getMatriu()[i][j] = num;
+				marca[mat].getFiles()[i][num-1]=true;
+				marca[mat].getColumnes()[j][num-1]=true;
+				
 			}
 			
 			if (i == cas * cas - 1 && j == cas * cas - 1) {
-				if (this.bona(i, j, mat) ) {
+				if (this.bona(i, j, mat/*, marca*/) ) {
 					if (mat < 4) {
-						resolSamurai (0, 0, mat + 1, sortida, fitxer);
+						resolSamurai (0, 0, mat + 1, sortida, fitxer, marca);
 					}
 					else {
 						if (sortida == 1) {
 							this.printaSamurai();
 						}
 						else if (sortida == 2) {
-							SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.passaAFixes() );
+							SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.passaAFixes());
 							guis.updateBoard(this.passaAMatriu() );
 						}
 						else if (sortida == 3) {
@@ -285,72 +276,132 @@ public class Samurai {
 				}
 			}
 			else {
-				if (this.bona(i,  j, mat) ) {
+				if (this.bona(i,  j, mat/*, marca*/) ) {
 					if (j == cas * cas - 1) {
-						resolSamurai(i + 1, 0, mat, sortida, fitxer);
+						resolSamurai(i + 1, 0, mat, sortida, fitxer, marca);
 					}
 					else {
-						resolSamurai(i, j + 1, mat, sortida, fitxer);
+						resolSamurai(i, j + 1, mat, sortida, fitxer, marca);
 					}
 				}
 			}
-			if (samurai[mat].getFixes()[i][j]) num++;
-			else num = cas * cas + 1;
-		}
-		if (samurai[mat].getFixes()[i][j]) {
-			samurai[mat].getMatriu()[i][j] = - 1;
-			if (mat == 0) {
-				int indy = 0;
-				int indx = 0;
-				while (indy + cas <= i) indy += cas;
-				while (indx + cas <= j) indx += cas;
-				if (indy == 0 && indx == 0){
-					this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = - 1;
-				}
-				else if (indy == 0 && indx == cas * cas - cas) {
-					this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = - 1;
-				}
-				else if (indy == cas * cas - cas && indx == 0) {
-					this.samurai[3].getMatriu()[i - cas * cas + cas][j + cas * cas - cas] = - 1;
-				}
-				else if (indy == cas * cas - cas && indx == cas * cas - cas) {
-					this.samurai[4].getMatriu()[i - cas * cas + cas][j - cas * cas + cas] = - 1;
-				}
-			}
-		}
-		
-	}
-	
-	public void resolSamurai(int i, int j, SudokuGUI gui, int mat, int sortida, String fitxer) {
-		int num = 1;
-		while (num <= cas * cas) {
-			if (samurai[mat].getFixes()[i][j]) {
-				samurai[mat].getMatriu()[i][j] = num;
+			if (samurai[mat].getFixes()[i][j]){
+				marca[mat].getFiles()[i][num-1]=false;
+				marca[mat].getColumnes()[j][num-1]=false;
 				if (mat == 0) {
 					int indy = 0;
 					int indx = 0;
 					while (indy + cas <= i) indy += cas;
 					while (indx + cas <= j) indx += cas;
-					if (indy == 0 && indx == 0) {
-						this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = samurai[0].getMatriu()[i][j];
+					if (indy == 0 && indx == 0){
+						this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = - 1;
+						marca[1].getFiles()[cas * cas - cas + i][num-1]=false;
+						marca[1].getColumnes()[cas * cas - cas + j][num-1]=false;
 					}
 					else if (indy == 0 && indx == cas * cas - cas) {
-						this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = samurai[0].getMatriu()[i][j];
+						this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = - 1;
+						marca[2].getFiles()[cas * cas - cas + i][num-1]=false;
+						marca[2].getColumnes()[j - cas * cas + cas][num-1]=false;
 					}
 					else if (indy == cas * cas - cas && indx == 0) {
-						this.samurai[3].getMatriu()[cas - cas * cas + i][j + cas * cas - cas] = samurai[0].getMatriu()[i][j];
+						this.samurai[3].getMatriu()[i - cas * cas + cas][j + cas * cas - cas] = - 1;
+						marca[3].getFiles()[cas - cas * cas + i][num-1]=false;
+						marca[3].getColumnes()[j + cas * cas - cas][num-1]=false;
 					}
 					else if (indy == cas * cas - cas && indx == cas * cas - cas) {
-						this.samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = samurai[0].getMatriu()[i][j];
+						this.samurai[4].getMatriu()[i - cas * cas + cas][j - cas * cas + cas] = - 1;
+						marca[4].getFiles()[cas - cas * cas + i][num-1]=false;
+						marca[4].getColumnes()[j - cas * cas + cas][num-1]=false;
 					}
 				}
+				num++;
+			}
+			else num = cas * cas + 1;
+		}
+		if (samurai[mat].getFixes()[i][j]) samurai[mat].getMatriu()[i][j] = - 1;
+	}
+	public void resolSamurai(int i, int j, SudokuGUI gui, int mat, int sortida, String fitxer, Marcatge[] marca) {
+		//Crida recursiva que resol un sudoku. El que fem és començar per la posició [0][0] del sudoku
+		//central i ens anem desplaçant per la fila en la que ens trobem, un cop hem acabat una fila, 
+		//anem al principi de la següent i així fins que arribem a l'últim element d'un dels sudokus
+		//que és el [cas*cas-1][cas*cas-1] (del sudoku individual). Un cop hem acabat amb un sudoku
+		//passem al següent en el següent ordre: central -> superior esquerre -> superior dret ->
+		//inferior esquerre -> inferior dret
+		int num = 1;
+		while (num <= cas * cas) {	//Mentre no haguem provat totes les combinacions de l'element
+			if (samurai[mat].getFixes()[i][j]) {	//Si la posició no és fixa, en modifiquem el valor
+				
+				if (mat != 0) while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) num++;
+				else{				//Si a més a més de no ser fixa estem al sudoku central en una de les caselles que es sobreposa, hi fiquem
+					int indy = 0;	//en l'altre el valor nou (cal a dir que les caselles compartides són fixes per tots els sudokus excepte
+					int indx = 0;	//el central).
+					while (indy + cas <= i) indy += cas;
+					while (indx + cas <= j) indx += cas;
+					if(indy==0 && indx==0){ 
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[1].getFiles()[cas * cas - cas + i][num-1]
+							||marca[1].getColumnes()[cas * cas - cas + j][num-1])) 
+							num++;
+						if(num != cas*cas+1){
+							marca[1].getFiles()[cas * cas - cas + i][num-1]=true;
+							marca[1].getColumnes()[cas * cas - cas + j][num-1]=true;
+							samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = num;
+						}
+					}
+					else if (indy == 0 && indx == cas * cas - cas){
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[2].getFiles()[cas * cas - cas + i][num-1]
+							||marca[2].getColumnes()[j - cas * cas + cas][num-1])){
+							num++;
+						}
+						if(num != cas*cas+1){
+							marca[2].getFiles()[cas * cas - cas + i][num-1]=true;
+							marca[2].getColumnes()[j - cas * cas + cas][num-1]=true;
+							samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = num;
+						}
+					}
+					else if (indy == cas * cas - cas && indx == 0){
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[3].getFiles()[cas - cas * cas + i][num-1]
+							||marca[3].getColumnes()[j + cas * cas - cas][num-1]))
+							num++;
+						if(num != cas*cas+1){
+							marca[3].getFiles()[cas - cas * cas + i][num-1]=true;
+							marca[3].getColumnes()[cas * cas - cas + j][num-1]=true;
+							samurai[3].getMatriu()[cas - cas * cas + i][cas * cas - cas + j] = num;
+						}
+					}
+					else if (indy == cas * cas - cas && indx == cas * cas - cas){
+						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+							||marca[4].getFiles()[cas - cas * cas + i][num-1]
+							||marca[4].getColumnes()[j - cas * cas + cas][num-1]))
+							num++;
+						if(num != cas*cas+1){
+							marca[4].getFiles()[cas - cas * cas + i][num-1]=true;
+							marca[4].getColumnes()[j - cas * cas + cas][num-1]=true;
+							samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = num;
+						}
+					}
+					else{
+						while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) 
+							num++;
+					}
+				}
+				if(num==cas*cas+1){
+					samurai[mat].getMatriu()[i][j] = -1;
+					return;
+				}
+				samurai[mat].getMatriu()[i][j] = num;
+				marca[mat].getFiles()[i][num-1]=true;
+				marca[mat].getColumnes()[j][num-1]=true;
+				
 			}
 			
 			if (i == cas * cas - 1 && j == cas * cas - 1) {
-				if(this.bona(i, j, mat)){
+				if (this.bona(i, j, mat/*, marca*/) ) {
 					if (mat < 4) {
 						gui.updateBoard(this.setSudoku().getMatriu() );
-						resolSamurai(0, 0, gui, mat + 1, sortida, fitxer);
+						resolSamurai (0, 0, gui, mat + 1, sortida, fitxer, marca);
 					}
 					else {
 						if (sortida == 1) {
@@ -358,7 +409,7 @@ public class Samurai {
 						}
 						else if (sortida == 2) {
 							gui.updateBoard(this.setSudoku().getMatriu() );
-							SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.passaAFixes() );
+							SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.passaAFixes());
 							guis.updateBoard(this.passaAMatriu() );
 						}
 						else if (sortida == 3) {
@@ -369,41 +420,50 @@ public class Samurai {
 				}
 			}
 			else {
-				if (this.bona(i,  j, mat) ) {
+				if (this.bona(i,  j, mat/*, marca*/) ) {
 					if (j == cas * cas - 1) {
 						gui.updateBoard(this.setSudoku().getMatriu() );
-						resolSamurai(i + 1, 0, gui, mat, sortida, fitxer);
+						resolSamurai(i + 1, 0, gui, mat, sortida, fitxer, marca);
 					}
 					else {
-						resolSamurai(i, j + 1, gui, mat, sortida, fitxer);
+						resolSamurai(i, j + 1, gui, mat, sortida, fitxer, marca);
 					}
 				}
 			}
-			if (samurai[mat].getFixes()[i][j]) num++;
+			if (samurai[mat].getFixes()[i][j]){
+				marca[mat].getFiles()[i][num-1]=false;
+				marca[mat].getColumnes()[j][num-1]=false;
+				if (mat == 0) {
+					int indy = 0;
+					int indx = 0;
+					while (indy + cas <= i) indy += cas;
+					while (indx + cas <= j) indx += cas;
+					if (indy == 0 && indx == 0){
+						this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = - 1;
+						marca[1].getFiles()[cas * cas - cas + i][num-1]=false;
+						marca[1].getColumnes()[cas * cas - cas + j][num-1]=false;
+					}
+					else if (indy == 0 && indx == cas * cas - cas) {
+						this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = - 1;
+						marca[2].getFiles()[cas * cas - cas + i][num-1]=false;
+						marca[2].getColumnes()[j - cas * cas + cas][num-1]=false;
+					}
+					else if (indy == cas * cas - cas && indx == 0) {
+						this.samurai[3].getMatriu()[i - cas * cas + cas][j + cas * cas - cas] = - 1;
+						marca[3].getFiles()[cas - cas * cas + i][num-1]=false;
+						marca[3].getColumnes()[j + cas * cas - cas][num-1]=false;
+					}
+					else if (indy == cas * cas - cas && indx == cas * cas - cas) {
+						this.samurai[4].getMatriu()[i - cas * cas + cas][j - cas * cas + cas] = - 1;
+						marca[4].getFiles()[cas - cas * cas + i][num-1]=false;
+						marca[4].getColumnes()[j - cas * cas + cas][num-1]=false;
+					}
+				}
+				num++;
+			}
 			else num = cas * cas + 1;
 		}
-		if(samurai[mat].getFixes()[i][j]) {
-			samurai[mat].getMatriu()[i][j] = - 1;
-			if (mat == 0) {
-				int indy = 0;
-				int indx = 0;
-				while (indy + cas <= i) indy += cas;
-				while (indx + cas <= j) indx += cas;
-				if (indy == 0 && indx == 0) {
-					this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = - 1;
-				}
-				else if (indy == 0 && indx == cas * cas - cas) {
-					this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = - 1;
-				}
-				else if (indy == cas * cas - cas && indx == 0) {
-					this.samurai[3].getMatriu()[-cas * cas + cas + i][j + cas * cas - cas] = - 1;
-				}
-				else if (indy == cas * cas - cas && indx == cas * cas - cas) {
-					this.samurai[4].getMatriu()[-cas * cas + cas + i][j - cas * cas + cas] = - 1;
-				}
-			}
-		}
-		
+		if (samurai[mat].getFixes()[i][j]) samurai[mat].getMatriu()[i][j] = - 1;
 	}
 	
 	public boolean[][] passaAFixes() {

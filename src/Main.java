@@ -64,13 +64,15 @@ public class Main {
 			//Entenem per casella el recuadre que engloba diversos elementes i que formen la totalitat del sudoku
 			Sudoku sudoku = new Sudoku (matriu, fixes, (int) Math.sqrt(aux.length));
 			
+			Marcatge marca = new Marcatge(sudoku);
+			
 			if (resposta.charAt(0) == 'S' || resposta.charAt(0) == 's') {
 				//Si hem de mostrar el procediment de resolució, hem d'inicalitzar la GUI
 				SudokuGUI gui = new SudokuGUI ("Sudoku", 0, 0, sudoku.getFixes() );
-				sudoku.resolSudoku(0, 0, sortida, fitxer, gui);
+				sudoku.resolSudoku(0, 0, sortida, fitxer, gui, marca);
 				gui.updateBoard(sudoku.getMatriu() );
 			}
-			else sudoku.resolSudoku (0, 0, sortida, fitxer);
+			else sudoku.resolSudoku (0, 0, sortida, fitxer, marca);
 		}
 		else {
 			//Obtenim el nombre d'elements per casella del samurai
@@ -81,21 +83,26 @@ public class Main {
 
 			//En aquest sudoku hi guardem el que és tot el conjunt dels cinc sudokus
 			Sudoku sudoku = new Sudoku(matriu, fixes, cas);
+			//Obtenim el tipus samurai a partir del sudoku gegant
+			Samurai samurai = sudoku.setSamurai(cas);
+			
+			Marcatge[] marca = new Marcatge[5];
+			
+			for(int i=0;i<5;i++) marca[i]= Marcatge.creaMarcatge(samurai.getSudoku(i));
+			
 			
 			if (resposta.charAt(0) == 'S' || resposta.charAt(0) == 's') {
 				//Mostrem la variable sudoku, que recordem és la visió global del samurai
 				SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes() );
 				gui.updateBoard(sudoku.getMatriu() );
 				
-				//Obtenim el tipus samurai a partir del sudoku gegant i cridem a la seva resolució gràfica
-				Samurai samurai = sudoku.setSamurai(cas);
-				samurai.resolSamurai(0, 0, gui, 0, sortida, fitxer);
+				//Cridem a la seva resolució gràfica
+				samurai.resolSamurai(0, 0, gui, 0, sortida, fitxer, marca);
 				gui.updateBoard(sudoku.getMatriu () );
 			}
 			else {
-				//Obtenim el tipus samurai a partir del sudoku gegant i cridem la seva resolució
-				Samurai samurai = sudoku.setSamurai(cas);
-				samurai.resolSamurai(0, 0, 0, sortida, fitxer);
+				//Cridem la seva resolució sense mostrar-la per pantalla
+				samurai.resolSamurai(0, 0, 0, sortida, fitxer, marca);
 			}
 		}
 		
