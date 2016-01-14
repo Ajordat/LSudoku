@@ -50,6 +50,7 @@ public class Main {
 		//Com que no teniem clar si INDEPENDENTMENT del mètode de sortida de la solució havíem de mostrar com 
 		//el programa resolia el sudoku, ho hem preguntat i adéu problemes
 		System.out.println ("Vols veure el procediment de resolució? (S/N)");
+
 		Scanner sc = new Scanner(System.in);
 		String resposta = sc.next();
 		sc.close();
@@ -65,7 +66,7 @@ public class Main {
 			Sudoku sudoku = new Sudoku (matriu, fixes, (int) Math.sqrt(aux.length));
 			
 			Marcatge marca = new Marcatge(sudoku);
-			
+
 			if (resposta.charAt(0) == 'S' || resposta.charAt(0) == 's') {
 				//Si hem de mostrar el procediment de resolució, hem d'inicalitzar la GUI
 				SudokuGUI gui = new SudokuGUI ("Sudoku", 0, 0, sudoku.getFixes() );
@@ -89,8 +90,7 @@ public class Main {
 			Marcatge[] marca = new Marcatge[5];
 			
 			for(int i=0;i<5;i++) marca[i]= Marcatge.creaMarcatge(samurai.getSudoku(i));
-			
-			
+						
 			if (resposta.charAt(0) == 'S' || resposta.charAt(0) == 's') {
 				//Mostrem la variable sudoku, que recordem és la visió global del samurai
 				SudokuGUI gui = new SudokuGUI("Sudoku", 0, 0, sudoku.getFixes() );

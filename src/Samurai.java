@@ -55,7 +55,7 @@ public class Samurai {
 		//Funció que retorna cert o fals segons el valor en la posició designada de la matriu que ens diuen
 		//està corractament situat o no. 
 		
-		return samurai[mat].bona(i, j/*, marca[mat]*/);
+		return samurai[mat].bona(i, j);
 	}
 	public void printaSamurai() {
 		//Procediment que s'encarrega de dibuixar al terminal un samurai 
@@ -177,6 +177,73 @@ public class Samurai {
 		return sudoku;
 	}
 	
+	public int seguentGerma(int i , int j, int num, int mat, Marcatge[] marca){
+		int indy = 0;	//en l'altre el valor nou (cal a dir que les caselles compartides són fixes per tots els sudokus excepte
+		int indx = 0;	//el central).
+		while (indy + cas <= i) indy += cas;
+		while (indx + cas <= j) indx += cas;
+		if(indy==0 && indx==0){ 
+			while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+				||marca[1].getFiles()[cas * cas - cas + i][num-1]
+				||marca[1].getColumnes()[cas * cas - cas + j][num-1])) 
+				num++;
+			if(num != cas*cas+1){
+				marca[1].getFiles()[cas * cas - cas + i][num-1]=true;
+				marca[1].getColumnes()[cas * cas - cas + j][num-1]=true;
+				samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = num;
+			}
+		}
+		else if (indy == 0 && indx == cas * cas - cas){
+			while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+				||marca[2].getFiles()[cas * cas - cas + i][num-1]
+				||marca[2].getColumnes()[j - cas * cas + cas][num-1])){
+				num++;
+			}
+			if(num != cas*cas+1){
+				marca[2].getFiles()[cas * cas - cas + i][num-1]=true;
+				marca[2].getColumnes()[j - cas * cas + cas][num-1]=true;
+				samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = num;
+			}
+		}
+		else if (indy == cas * cas - cas && indx == 0){
+			while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+				||marca[3].getFiles()[cas - cas * cas + i][num-1]
+				||marca[3].getColumnes()[j + cas * cas - cas][num-1]))
+				num++;
+			if(num != cas*cas+1){
+				marca[3].getFiles()[cas - cas * cas + i][num-1]=true;
+				marca[3].getColumnes()[cas * cas - cas + j][num-1]=true;
+				samurai[3].getMatriu()[cas - cas * cas + i][cas * cas - cas + j] = num;
+			}
+		}else if (indy == cas * cas - cas && indx == cas * cas - cas){
+			while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
+				||marca[4].getFiles()[cas - cas * cas + i][num-1]
+				||marca[4].getColumnes()[j - cas * cas + cas][num-1]))
+				num++;
+			if(num != cas*cas+1){
+				marca[4].getFiles()[cas - cas * cas + i][num-1]=true;
+				marca[4].getColumnes()[j - cas * cas + cas][num-1]=true;
+				samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = num;
+			}
+		}
+		else{
+			while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) 
+				num++;
+		}
+		return num;
+	}
+	
+	public void marcatge(int i, int j, int num, int mat, Marcatge[] marca){
+
+		marca[mat].getFiles()[i][num-1] = true;
+		marca[mat].getColumnes()[j][num-1] = true;
+	}
+	
+	public void desmarcatge(int i, int j, int num, int mat, Marcatge[] marca){
+
+		marca[mat].getFiles()[i][num-1] = false;
+		marca[mat].getColumnes()[j][num-1] = false;
+	}
 	
 	public void resolSamurai(int i, int j, int mat, int sortida, String fitxer, Marcatge[] marca) {
 		//Crida recursiva que resol un sudoku. El que fem és començar per la posició [0][0] del sudoku
@@ -191,72 +258,18 @@ public class Samurai {
 				
 				if (mat != 0) while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) num++;
 				else{				//Si a més a més de no ser fixa estem al sudoku central en una de les caselles que es sobreposa, hi fiquem
-					int indy = 0;	//en l'altre el valor nou (cal a dir que les caselles compartides són fixes per tots els sudokus excepte
-					int indx = 0;	//el central).
-					while (indy + cas <= i) indy += cas;
-					while (indx + cas <= j) indx += cas;
-					if(indy==0 && indx==0){ 
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[1].getFiles()[cas * cas - cas + i][num-1]
-							||marca[1].getColumnes()[cas * cas - cas + j][num-1])) 
-							num++;
-						if(num != cas*cas+1){
-							marca[1].getFiles()[cas * cas - cas + i][num-1]=true;
-							marca[1].getColumnes()[cas * cas - cas + j][num-1]=true;
-							samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = num;
-						}
-					}
-					else if (indy == 0 && indx == cas * cas - cas){
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[2].getFiles()[cas * cas - cas + i][num-1]
-							||marca[2].getColumnes()[j - cas * cas + cas][num-1])){
-							num++;
-						}
-						if(num != cas*cas+1){
-							marca[2].getFiles()[cas * cas - cas + i][num-1]=true;
-							marca[2].getColumnes()[j - cas * cas + cas][num-1]=true;
-							samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = num;
-						}
-					}
-					else if (indy == cas * cas - cas && indx == 0){
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[3].getFiles()[cas - cas * cas + i][num-1]
-							||marca[3].getColumnes()[j + cas * cas - cas][num-1]))
-							num++;
-						if(num != cas*cas+1){
-							marca[3].getFiles()[cas - cas * cas + i][num-1]=true;
-							marca[3].getColumnes()[cas * cas - cas + j][num-1]=true;
-							samurai[3].getMatriu()[cas - cas * cas + i][cas * cas - cas + j] = num;
-						}
-					}
-					else if (indy == cas * cas - cas && indx == cas * cas - cas){
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[4].getFiles()[cas - cas * cas + i][num-1]
-							||marca[4].getColumnes()[j - cas * cas + cas][num-1]))
-							num++;
-						if(num != cas*cas+1){
-							marca[4].getFiles()[cas - cas * cas + i][num-1]=true;
-							marca[4].getColumnes()[j - cas * cas + cas][num-1]=true;
-							samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = num;
-						}
-					}
-					else{
-						while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) 
-							num++;
-					}
+					num=seguentGerma(i, j, num, mat, marca);
 				}
 				if(num==cas*cas+1){
 					samurai[mat].getMatriu()[i][j] = -1;
 					return;
 				}
 				samurai[mat].getMatriu()[i][j] = num;
-				marca[mat].getFiles()[i][num-1]=true;
-				marca[mat].getColumnes()[j][num-1]=true;
-				
+				marcatge(i, j, num, mat, marca);				
 			}
 			
 			if (i == cas * cas - 1 && j == cas * cas - 1) {
-				if (this.bona(i, j, mat/*, marca*/) ) {
+				if (this.bona(i, j, mat) ) {
 					if (mat < 4) {
 						resolSamurai (0, 0, mat + 1, sortida, fitxer, marca);
 					}
@@ -276,7 +289,7 @@ public class Samurai {
 				}
 			}
 			else {
-				if (this.bona(i,  j, mat/*, marca*/) ) {
+				if (this.bona(i,  j, mat) ) {
 					if (j == cas * cas - 1) {
 						resolSamurai(i + 1, 0, mat, sortida, fitxer, marca);
 					}
@@ -286,8 +299,7 @@ public class Samurai {
 				}
 			}
 			if (samurai[mat].getFixes()[i][j]){
-				marca[mat].getFiles()[i][num-1]=false;
-				marca[mat].getColumnes()[j][num-1]=false;
+				desmarcatge(i, j, num, mat, marca);
 				if (mat == 0) {
 					int indy = 0;
 					int indx = 0;
@@ -295,23 +307,19 @@ public class Samurai {
 					while (indx + cas <= j) indx += cas;
 					if (indy == 0 && indx == 0){
 						this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = - 1;
-						marca[1].getFiles()[cas * cas - cas + i][num-1]=false;
-						marca[1].getColumnes()[cas * cas - cas + j][num-1]=false;
+						desmarcatge(cas * cas - cas + i, cas * cas - cas + j, num, 1, marca);
 					}
 					else if (indy == 0 && indx == cas * cas - cas) {
 						this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = - 1;
-						marca[2].getFiles()[cas * cas - cas + i][num-1]=false;
-						marca[2].getColumnes()[j - cas * cas + cas][num-1]=false;
+						desmarcatge(cas * cas - cas + i, j - cas * cas + cas, num, 2, marca);
 					}
 					else if (indy == cas * cas - cas && indx == 0) {
 						this.samurai[3].getMatriu()[i - cas * cas + cas][j + cas * cas - cas] = - 1;
-						marca[3].getFiles()[cas - cas * cas + i][num-1]=false;
-						marca[3].getColumnes()[j + cas * cas - cas][num-1]=false;
+						desmarcatge(cas - cas * cas + i, cas * cas - cas + j, num, 3, marca);
 					}
 					else if (indy == cas * cas - cas && indx == cas * cas - cas) {
 						this.samurai[4].getMatriu()[i - cas * cas + cas][j - cas * cas + cas] = - 1;
-						marca[4].getFiles()[cas - cas * cas + i][num-1]=false;
-						marca[4].getColumnes()[j - cas * cas + cas][num-1]=false;
+						desmarcatge(cas - cas * cas + i, j - cas * cas + cas, num, 4, marca);
 					}
 				}
 				num++;
@@ -329,76 +337,22 @@ public class Samurai {
 		//inferior esquerre -> inferior dret
 		int num = 1;
 		while (num <= cas * cas) {	//Mentre no haguem provat totes les combinacions de l'element
-			if (samurai[mat].getFixes()[i][j]) {	//Si la posició no és fixa, en modifiquem el valor
-				
+			if (samurai[mat].getFixes()[i][j]) {	
+				//Si la posició no és fixa, trobem el següent valor disponible directament
 				if (mat != 0) while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) num++;
-				else{				//Si a més a més de no ser fixa estem al sudoku central en una de les caselles que es sobreposa, hi fiquem
-					int indy = 0;	//en l'altre el valor nou (cal a dir que les caselles compartides són fixes per tots els sudokus excepte
-					int indx = 0;	//el central).
-					while (indy + cas <= i) indy += cas;
-					while (indx + cas <= j) indx += cas;
-					if(indy==0 && indx==0){ 
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[1].getFiles()[cas * cas - cas + i][num-1]
-							||marca[1].getColumnes()[cas * cas - cas + j][num-1])) 
-							num++;
-						if(num != cas*cas+1){
-							marca[1].getFiles()[cas * cas - cas + i][num-1]=true;
-							marca[1].getColumnes()[cas * cas - cas + j][num-1]=true;
-							samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = num;
-						}
-					}
-					else if (indy == 0 && indx == cas * cas - cas){
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[2].getFiles()[cas * cas - cas + i][num-1]
-							||marca[2].getColumnes()[j - cas * cas + cas][num-1])){
-							num++;
-						}
-						if(num != cas*cas+1){
-							marca[2].getFiles()[cas * cas - cas + i][num-1]=true;
-							marca[2].getColumnes()[j - cas * cas + cas][num-1]=true;
-							samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = num;
-						}
-					}
-					else if (indy == cas * cas - cas && indx == 0){
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[3].getFiles()[cas - cas * cas + i][num-1]
-							||marca[3].getColumnes()[j + cas * cas - cas][num-1]))
-							num++;
-						if(num != cas*cas+1){
-							marca[3].getFiles()[cas - cas * cas + i][num-1]=true;
-							marca[3].getColumnes()[cas * cas - cas + j][num-1]=true;
-							samurai[3].getMatriu()[cas - cas * cas + i][cas * cas - cas + j] = num;
-						}
-					}
-					else if (indy == cas * cas - cas && indx == cas * cas - cas){
-						while(num<=cas*cas&&(marca[0].getFiles()[i][num-1]||marca[0].getColumnes()[j][num-1]
-							||marca[4].getFiles()[cas - cas * cas + i][num-1]
-							||marca[4].getColumnes()[j - cas * cas + cas][num-1]))
-							num++;
-						if(num != cas*cas+1){
-							marca[4].getFiles()[cas - cas * cas + i][num-1]=true;
-							marca[4].getColumnes()[j - cas * cas + cas][num-1]=true;
-							samurai[4].getMatriu()[cas - cas * cas + i][j - cas * cas + cas] = num;
-						}
-					}
-					else{
-						while(num<=cas*cas&&(marca[mat].getFiles()[i][num-1]||marca[mat].getColumnes()[j][num-1])) 
-							num++;
-					}
+				else{
+					num=seguentGerma(i, j, num, mat, marca);
 				}
 				if(num==cas*cas+1){
 					samurai[mat].getMatriu()[i][j] = -1;
 					return;
 				}
 				samurai[mat].getMatriu()[i][j] = num;
-				marca[mat].getFiles()[i][num-1]=true;
-				marca[mat].getColumnes()[j][num-1]=true;
-				
+				marcatge(i, j, num, mat, marca);
 			}
 			
 			if (i == cas * cas - 1 && j == cas * cas - 1) {
-				if (this.bona(i, j, mat/*, marca*/) ) {
+				if (this.bona(i, j, mat) ) {
 					if (mat < 4) {
 						gui.updateBoard(this.setSudoku().getMatriu() );
 						resolSamurai (0, 0, gui, mat + 1, sortida, fitxer, marca);
@@ -420,7 +374,7 @@ public class Samurai {
 				}
 			}
 			else {
-				if (this.bona(i,  j, mat/*, marca*/) ) {
+				if (this.bona(i,  j, mat) ) {
 					if (j == cas * cas - 1) {
 						gui.updateBoard(this.setSudoku().getMatriu() );
 						resolSamurai(i + 1, 0, gui, mat, sortida, fitxer, marca);
@@ -431,8 +385,7 @@ public class Samurai {
 				}
 			}
 			if (samurai[mat].getFixes()[i][j]){
-				marca[mat].getFiles()[i][num-1]=false;
-				marca[mat].getColumnes()[j][num-1]=false;
+				desmarcatge(i, j, num, mat, marca);
 				if (mat == 0) {
 					int indy = 0;
 					int indx = 0;
@@ -440,23 +393,19 @@ public class Samurai {
 					while (indx + cas <= j) indx += cas;
 					if (indy == 0 && indx == 0){
 						this.samurai[1].getMatriu()[cas * cas - cas + i][cas * cas - cas + j] = - 1;
-						marca[1].getFiles()[cas * cas - cas + i][num-1]=false;
-						marca[1].getColumnes()[cas * cas - cas + j][num-1]=false;
+						desmarcatge(cas * cas - cas + i, cas * cas - cas + j, num, 1, marca);
 					}
 					else if (indy == 0 && indx == cas * cas - cas) {
 						this.samurai[2].getMatriu()[cas * cas - cas + i][j - cas * cas + cas] = - 1;
-						marca[2].getFiles()[cas * cas - cas + i][num-1]=false;
-						marca[2].getColumnes()[j - cas * cas + cas][num-1]=false;
+						desmarcatge(cas * cas - cas + i, j - cas * cas + cas, num, 2, marca);
 					}
 					else if (indy == cas * cas - cas && indx == 0) {
 						this.samurai[3].getMatriu()[i - cas * cas + cas][j + cas * cas - cas] = - 1;
-						marca[3].getFiles()[cas - cas * cas + i][num-1]=false;
-						marca[3].getColumnes()[j + cas * cas - cas][num-1]=false;
+						desmarcatge(cas - cas * cas + i, cas * cas - cas + j, num, 3, marca);
 					}
 					else if (indy == cas * cas - cas && indx == cas * cas - cas) {
 						this.samurai[4].getMatriu()[i - cas * cas + cas][j - cas * cas + cas] = - 1;
-						marca[4].getFiles()[cas - cas * cas + i][num-1]=false;
-						marca[4].getColumnes()[j - cas * cas + cas][num-1]=false;
+						desmarcatge(cas - cas * cas + i, j - cas * cas + cas, num, 4, marca);
 					}
 				}
 				num++;
@@ -465,6 +414,7 @@ public class Samurai {
 		}
 		if (samurai[mat].getFixes()[i][j]) samurai[mat].getMatriu()[i][j] = - 1;
 	}
+	
 	
 	public boolean[][] passaAFixes() {
 		boolean[][] fixes = new boolean[3 * cas * cas - 2 * cas][3 * cas * cas - 2 * cas];
