@@ -7,6 +7,7 @@ public class Marcatge {
 	public Marcatge() {
 		super();
 	}
+	
 	public Marcatge(Sudoku s) {
 		super();
 		int indx, indy;
