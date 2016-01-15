@@ -50,7 +50,7 @@ public class Main {
 		//Com que no teniem clar si INDEPENDENTMENT del mètode de sortida de la solució havíem de mostrar com 
 		//el programa resolia el sudoku, ho hem preguntat i adéu problemes
 		System.out.println ("Vols veure el procediment de resolució? (S/N)");
-
+		
 		Scanner sc = new Scanner(System.in);
 		String resposta = sc.next();
 		sc.close();
