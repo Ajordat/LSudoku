@@ -77,11 +77,12 @@ public class Sudoku {
 	public void printaSudoku() {
 		//Procediment que s'encarrega de pintar a la consola el sudoku que el crida
 		int indy = 0, indx;
-		for (int i = 0; i < cas * cas; i++) {
+		int quad=cas*cas;
+		for (int i = 0; i < quad; i++) {
 			while (indy + cas <= i) indy += cas;
 			if (indy == i) {
 				indx = 0;
-				for (int j = 0; j < cas * cas; j++) {
+				for (int j = 0; j < quad; j++) {
 					while (indx + cas <= j) indx += cas;
 					if (j != 0) System.out.print (" ");
 					if (j == indx) System.out.print ("+  ");
@@ -90,7 +91,7 @@ public class Sudoku {
 				System.out.println (" +");
 			}
 			indx = 0;
-			for (int j = 0; j < cas * cas; j++) {
+			for (int j = 0; j < quad; j++) {
 				while (indx + cas <= j) indx += cas;
 				if (indx == j && indx != 0) System.out.print (" | ");
 				else if (indx == j) System.out.print ("| ");
@@ -100,7 +101,7 @@ public class Sudoku {
 			System.out.println (" |");
 		}
 		indx = 0;
-		for (int j = 0; j < cas * cas; j++) {
+		for (int j = 0; j < quad; j++) {
 			while (indx + cas <= j) indx += cas;
 			if (j != 0) System.out.print (" ");
 			if (j == indx) System.out.print ("+  ");
@@ -128,9 +129,10 @@ public class Sudoku {
 	    
 	}
 	
-	public void seguentGerma(int i, int j, int num, Marcatge marca){
+	public int seguentGerma(int i, int j, int num, Marcatge marca){
 		while(num<=cas*cas&&(marca.getFiles()[i][num-1]||marca.getColumnes()[j][num-1]||
 				marca.getCasella()[(i/cas)*cas+(j/cas)][num-1])) num++;
+		return num;
 	}
 	
 	public void marcatge(int i, int j, int x, Marcatge marca){
@@ -149,18 +151,18 @@ public class Sudoku {
 		//Aquest procediment fa exactament el mateix que el procediment explicat anteriorment
 		//amb la diferencia que aquest mostra l'estat de resolució del sudoku a mesura que avança
 		int num = 1;
-		while (num <= cas * cas) {
+		int quad = cas * cas;
+		while (num <= quad) {
 			if (fixes[i][j]){
-				while(num<=cas*cas&&(marca.getFiles()[i][num-1]||marca.getColumnes()[j][num-1]
-						||marca.getCasella()[(i/cas)*cas+(j/cas)][num-1])) num++;
-				if(num==cas*cas+1){
+				num=seguentGerma(i, j, num, marca);
+				if(num==quad+1){
 					matriu[i][j] = - 1;
 					return;
 				}
 				matriu[i][j] = num;
 				marcatge(i, j, num, marca);
 			}
-			if (i == cas * cas - 1 && j == cas * cas - 1) {		//SOLUCIÓ
+			if (i == quad - 1 && j == quad - 1) {		//SOLUCIÓ
 					gui.updateBoard(this.matriu);
 					if (sortida == 1) {
 						this.printaSudoku();
@@ -175,7 +177,7 @@ public class Sudoku {
 					Sudoku.solucions++;
 			}
 			else {		//NO SOLUCIÓ
-				if (j == cas * cas - 1) {
+				if (j == quad - 1) {
 					gui.updateBoard(this.matriu);	//Actualitzem l'interfície quan tenim una
 													//línia resolta
 					this.resolSudoku(i + 1, 0, sortida, fitxer, gui, marca);
@@ -188,7 +190,7 @@ public class Sudoku {
 				desmarcatge(i, j, num, marca);
 				num++;
 			}
-			else num = cas * cas + 1;
+			else num = quad + 1;
 		}
 		if (fixes[i][j]) matriu[i][j] = - 1;
 	}
@@ -197,18 +199,19 @@ public class Sudoku {
 		//Aquest procediment fa exactament el mateix que el procediment explicat anteriorment
 		//amb la diferencia que aquest mostra l'estat de resolució del sudoku a mesura que avança
 		int num = 1;
-		while (num <= cas * cas) {
-			if (fixes[i][j]){
-				while(num<=cas*cas&&(marca.getFiles()[i][num-1]||marca.getColumnes()[j][num-1]
-						||marca.getCasella()[(i/cas)*cas+(j/cas)][num-1])) num++;
-				if(num==cas*cas+1){
+		int quad=cas*cas;
+		
+		while (num <= quad) {
+			if (fixes[i][j]) {
+				num = seguentGerma(i, j, num, marca);
+				if(num == quad + 1){
 					matriu[i][j] = - 1;
 					return;
 				}
 				matriu[i][j] = num;
 				marcatge(i, j, num, marca);
 			}
-			if (i == cas * cas - 1 && j == cas * cas - 1) {		//SOLUCIÓ
+			if (i == quad - 1 && j == quad - 1) {		//SOLUCIÓ
 					if (sortida == 1) {
 						this.printaSudoku();
 					}
@@ -222,7 +225,7 @@ public class Sudoku {
 					Sudoku.solucions++;
 			}
 			else {		//NO SOLUCIÓ
-				if (j == cas * cas - 1) {
+				if (j == quad - 1) {
 					this.resolSudoku(i + 1, 0, sortida, fitxer, marca);
 				}
 				else {
@@ -233,7 +236,7 @@ public class Sudoku {
 				desmarcatge(i, j, num, marca);
 				num++;
 			}
-			else num = cas * cas + 1;
+			else num = quad + 1;
 		}
 		if (fixes[i][j]) matriu[i][j] = - 1;
 	}
@@ -248,79 +251,73 @@ public class Sudoku {
 		samurai.getSudoku(2).setCas(cas);
 		samurai.getSudoku(3).setCas(cas);
 		samurai.getSudoku(4).setCas(cas);
+		int aux=cas*cas-cas;
+		int quad=cas*cas;
 		//Set del sudoku central
-		for (int i = cas * cas - cas, y = 0; i < 2 * cas * cas - cas; i++, y++) {
-			for (int j = cas * cas - cas, x = 0; j < 2 * cas * cas - cas; j++,x++) {
+		for (int i = aux, y = 0; i < 2 * quad - cas; i++, y++) {
+			for (int j = aux, x = 0; j < 2 * quad - cas; j++,x++) {
 				samurai.getSudoku(0).getMatriu()[y][x] = matriu[i][j];
 				samurai.getSudoku(0).getFixes()[y][x] = fixes[i][j];
 			}
 		}
 		//Set del sudoku superior esquerre
 		//Fem que la casella d'abaix a la dreta tingui els elements fixes
-		for (int i = 0; i < cas * cas; i++) {
-			for (int j = 0; j < cas * cas; j++) {
+		for (int i = 0; i < quad; i++) {
+			for (int j = 0; j < quad; j++) {
 				samurai.getSudoku(1).getMatriu()[i][j] = matriu[i][j];
 				samurai.getSudoku(1).getFixes()[i][j] = fixes[i][j];
 			}
 		}
-		for (int i = cas * cas - cas; i < cas * cas; i++) {
-			for (int j = cas * cas - cas; j < cas * cas; j++) {
+		for (int i = aux; i < quad; i++) {
+			for (int j = aux; j < quad; j++) {
 				samurai.getSudoku(1).getFixes()[i][j] = false;
 			}
 		}
 		//Set del sudoku superior dret
 		//Fem que la casella d'abaix a l'esquerra tingui els elements fixes
-		for (int i = 0, y = 0; i < cas * cas; i++, y++) {
-			for (int j = 2 * cas * (cas - 1), x = 0; j < 3 * cas * cas - 2 * cas; j++, x++) {
+		for (int i = 0, y = 0; i < quad; i++, y++) {
+			//for (int j = 2 * cas * (cas - 1), x = 0; j < 3 * quad - 2 * cas; j++, x++) {
+			for (int j = 2 * quad - 2 * cas, x = 0; j < 3 * quad - 2 * cas; j++, x++) {
 				samurai.getSudoku(2).getMatriu()[y][x] = matriu[i][j];
 				samurai.getSudoku(2).getFixes()[y][x] = fixes[i][j];
 			}
 		}
-		for (int i = cas * cas - cas, y = cas * cas - cas; i < cas * cas; i++, y++) {
-			for (int j = 2 * cas * (cas - 1), x = 0; j < 2 * cas * (cas - 1) + cas; j++, x++) {
+		for (int i = aux, y = aux; i < quad; i++, y++) {
+			//for (int j = 2 * cas * (cas - 1), x = 0; j < 2 * cas * (cas - 1) + cas; j++, x++) {
+			for (int j = 2 * quad - 2 * cas, x = 0; j < 2 * quad - 2 * cas + cas; j++, x++) {	
 				samurai.getSudoku(2).getFixes()[y][x] = false;
 			}
 		}
 		
 		//Set del sudoku inferior esquerre
 		//Fem que la casella de dalt a la dreta tingui els elements fixes
-		for (int i = 2 * cas * (cas - 1), y = 0; i < 3 * cas * cas - 2 * cas; i++, y++) {
-			for (int j = 0, x = 0; j < cas * cas; j++, x++) {
+		for (int i = 2 * quad - 2 * cas, y = 0; i < 3 * quad - 2 * cas; i++, y++) {
+			for (int j = 0, x = 0; j < quad; j++, x++) {
 				samurai.getSudoku(3).getMatriu()[y][x] = matriu[i][j];
 				samurai.getSudoku(3).getFixes()[y][x] = fixes[i][j];
 			}
 		}
-		for (int i = 2 * cas * (cas - 1), y = 0; i < 2 * cas * (cas - 1) + cas; i++, y++) {
-			for (int j = cas * cas - cas, x = cas * cas - cas; j < cas * cas; j++, x++) {
+		for (int i = 2 * quad - 2 * cas, y = 0; i < 2 * quad - 2 * cas + cas; i++, y++) {
+			for (int j = aux, x = aux; j < quad; j++, x++) {
 				samurai.getSudoku(3).getFixes()[y][x] = false;
 			}
 		}
 		
 		//Set del sudoku inferior dret
 		//Fem que la casella de dalt a l'esquerra tingui els elements fixes
-		for (int i = 2 * cas * (cas - 1), y = 0; i < 3 * cas * cas - 2 * cas; i++, y++) {
-			for (int j = 2 * cas * (cas - 1), x = 0; j < 3 * cas * cas - 2 * cas; j++, x++) {
+		for (int i = 2 * quad - 2 * cas, y = 0; i < 3 * quad - 2 * cas; i++, y++) {
+			for (int j = 2 * quad - 2 * cas, x = 0; j < 3 * quad - 2 * cas; j++, x++) {
 				samurai.getSudoku(4).getMatriu()[y][x] = matriu[i][j];
 				samurai.getSudoku(4).getFixes()[y][x] = fixes[i][j];
 			}
 		}
-		for (int i = 2 * cas * (cas - 1), y = 0; i < 2 * cas * (cas - 1) + cas; i++, y++) {
-			for (int j = 2 * cas * (cas - 1), x = 0; j < 2 * cas * (cas - 1) + cas; j++, x++) {
+		for (int i = 2 * quad - 2 * cas, y = 0; i < 2 * quad - 2 * cas + cas; i++, y++) {
+			for (int j = 2 * quad - 2 * cas, x = 0; j < 2 * quad - 2 * cas + cas; j++, x++) {
 				samurai.getSudoku(4).getFixes()[y][x] = false;
 			}
 		}
 		
 		return samurai;
 	}
-	
-	public static void printaFixes(boolean[][] a){
-		for(int i=0;i<9;i++){
-			for(int j=0;j<9;j++){
-				if(a[i][j]) System.out.print("T ");
-				else System.out.print("F ");
-			}
-			System.out.println();
-		}
-	}
-	
+		
 }

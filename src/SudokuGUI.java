@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
  * 
  * @version 1.0 14/12/2015
  */
+@SuppressWarnings("serial")
 public class SudokuGUI extends JFrame {
 	/** Number of rows of the board  */
 	private int rows;
