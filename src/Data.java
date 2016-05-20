@@ -1,3 +1,6 @@
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.ThreadMXBean;
 import java.util.Calendar;
 
 //Classe que utilitzem per tal de treballar amb les dates que necessitem
@@ -98,4 +101,22 @@ public class Data {
 			Integer.toString(milisegons) );
 	}
 
+	
+	public static void main(String[] args) {
+		ThreadMXBean th = ManagementFactory.getThreadMXBean();
+		long inici = System.nanoTime();
+		
+		MemoryMXBean tm = ManagementFactory.getMemoryMXBean();
+		System.out.println(tm.getHeapMemoryUsage().getUsed());
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Temps real = " + (System.nanoTime()-inici)/1000000);
+		System.out.println("Temps CPU = " + th.getCurrentThreadCpuTime()/1000000);
+		
+	}
+	
 }
