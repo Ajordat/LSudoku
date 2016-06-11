@@ -52,7 +52,7 @@ public class Samurai {
 	
 	public void printaSamurai() {
 		//Procediment que s'encarrega de dibuixar al terminal un samurai 
-		Sudoku sudoku = this.setSudoku();
+		Sudoku sudoku = setSudoku();
 		int indx, indy = 0;
 		int quad = cas * cas;
 		for (int i = 0; i < 3 * quad - 2 * cas; i++) {
@@ -103,7 +103,7 @@ public class Samurai {
 		//s'especifica a l'enunciat
 	    try {
 	    	
-	    	Sudoku sudoku = this.setSudoku();
+	    	Sudoku sudoku = setSudoku();
 			PrintWriter printw = new PrintWriter(new FileWriter(fitxer) );
 			for (int i = 0; i < 3 * cas * cas - 2 * cas; i++) {
 				for (int j = 0; j < 3 * cas * cas - 2 * cas; j++) {
@@ -133,36 +133,36 @@ public class Samurai {
 		//Set del sudoku superior dret
 		for(int i = 0, y = 0; i < cas * cas; i++, y++) {
 			for (int j = 2 * cas * (cas - 1), x = 0; j < 3 * cas * cas - 2 * cas; j++, x++) {
-				sudoku.getMatriu()[i][j] = this.getSudoku(2).getMatriu()[y][x];
-				sudoku.getFixes()[i][j] = this.getSudoku(2).getFixes()[y][x];
+				sudoku.getMatriu()[i][j] = getSudoku(2).getMatriu()[y][x];
+				sudoku.getFixes()[i][j] = getSudoku(2).getFixes()[y][x];
 			}
 		}
 		//Set del sudoku inferior esquerre
 		for (int i = 2 * cas * (cas - 1), y = 0; i < 3 * cas * cas - 2 * cas; i++, y++) {
 			for (int j = 0, x = 0; j < cas * cas; j++, x++) {
-				sudoku.getMatriu()[i][j] = this.getSudoku(3).getMatriu()[y][x];
-				sudoku.getFixes()[i][j] = this.getSudoku(3).getFixes()[y][x];
+				sudoku.getMatriu()[i][j] = getSudoku(3).getMatriu()[y][x];
+				sudoku.getFixes()[i][j] = getSudoku(3).getFixes()[y][x];
 			}
 		}
 		//Set del sudoku inferior dret
 		for (int i = 2 * cas * (cas - 1), y = 0; i < 3 * cas * cas - 2 * cas; i++, y++) {
 			for (int j = 2 * cas * (cas - 1), x = 0; j < 3 * cas * cas - 2 * cas; j++, x++) {
-				sudoku.getMatriu()[i][j] = this.getSudoku(4).getMatriu()[y][x];
-				sudoku.getFixes()[i][j] = this.getSudoku(4).getFixes()[y][x];
+				sudoku.getMatriu()[i][j] = getSudoku(4).getMatriu()[y][x];
+				sudoku.getFixes()[i][j] = getSudoku(4).getFixes()[y][x];
 			}
 		}
 		//Set del sudoku superior esquerre
 		for (int i = 0; i < cas * cas; i++) {
 			for(int j = 0;j < cas * cas; j++){
-				sudoku.getMatriu()[i][j] = this.getSudoku(1).getMatriu()[i][j];
-				sudoku.getFixes()[i][j] = this.getSudoku(1).getFixes()[i][j];
+				sudoku.getMatriu()[i][j] = getSudoku(1).getMatriu()[i][j];
+				sudoku.getFixes()[i][j] = getSudoku(1).getFixes()[i][j];
 			}
 		}
 		//Set del sudoku central
 		for(int i = cas * cas - cas, y = 0; i < 2 * cas * cas - cas; i++, y++) {
 			for (int j = cas * cas - cas, x = 0; j < 2 * cas * cas - cas; j++, x++) {
-				sudoku.getMatriu()[i][j] = this.getSudoku(0).getMatriu()[y][x];
-				sudoku.getFixes()[i][j] = this.getSudoku(0).getFixes()[y][x];
+				sudoku.getMatriu()[i][j] = getSudoku(0).getMatriu()[y][x];
+				sudoku.getFixes()[i][j] = getSudoku(0).getFixes()[y][x];
 			}
 		}
 		return sudoku;
@@ -287,8 +287,8 @@ public class Samurai {
 						this.printaSamurai();
 					}
 					else if (sortida == 2) {
-						SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.passaAFixes());
-						guis.updateBoard(this.passaAMatriu() );
+						SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, passaAFixes());
+						guis.updateBoard(passaAMatriu() );
 					}
 					else if (sortida == 3) {
 						this.passaAFitxer(fitxer);
@@ -311,19 +311,19 @@ public class Samurai {
 					int indx=(j/cas)*cas;
 					int aux = cas * cas -cas;
 					if (indy == 0 && indx == 0){
-						this.samurai[1].getMatriu()[aux + i][aux + j] = - 1;
+						samurai[1].getMatriu()[aux + i][aux + j] = - 1;
 						desmarcatge(aux + i, aux + j, num, 1, marca);
 					}
 					else if (indy == 0 && indx == aux) {
-						this.samurai[2].getMatriu()[aux + i][j - aux] = - 1;
+						samurai[2].getMatriu()[aux + i][j - aux] = - 1;
 						desmarcatge(aux + i, j - aux, num, 2, marca);
 					}
 					else if (indy == aux && indx == 0) {
-						this.samurai[3].getMatriu()[i - aux][j + aux] = - 1;
+						samurai[3].getMatriu()[i - aux][j + aux] = - 1;
 						desmarcatge(i - aux, aux + j, num, 3, marca);
 					}
 					else if (indy == aux && indx == aux) {
-						this.samurai[4].getMatriu()[i - aux][j - aux] = - 1;
+						samurai[4].getMatriu()[i - aux][j - aux] = - 1;
 						desmarcatge(i - aux, j - aux, num, 4, marca);
 					}
 				}
@@ -369,9 +369,9 @@ public class Samurai {
 						this.printaSamurai();
 					}
 					else if (sortida == 2) {
-						gui.updateBoard(this.setSudoku().getMatriu() );
-						SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, this.passaAFixes());
-						guis.updateBoard(this.passaAMatriu() );
+						gui.updateBoard(setSudoku().getMatriu() );
+						SudokuGUI guis = new SudokuGUI("Solució samurai", 0, 0, passaAFixes());
+						guis.updateBoard(passaAMatriu() );
 					}
 					else if (sortida == 3) {
 						this.passaAFitxer(fitxer);
@@ -381,7 +381,7 @@ public class Samurai {
 			}
 			else {
 				if (j == cas * cas - 1) {
-					gui.updateBoard(this.setSudoku().getMatriu() );
+					gui.updateBoard(setSudoku().getMatriu() );
 					resolSamurai(i + 1, 0, gui, mat, sortida, fitxer, marca);
 				}
 				else {
@@ -395,19 +395,19 @@ public class Samurai {
 					int indx=(j/cas)*cas;
 					int aux = cas * cas - cas;
 					if (indy == 0 && indx == 0){
-						this.samurai[1].getMatriu()[aux + i][aux + j] = - 1;
+						samurai[1].getMatriu()[aux + i][aux + j] = - 1;
 						desmarcatge(aux + i, aux + j, num, 1, marca);
 					}
 					else if (indy == 0 && indx == aux) {
-						this.samurai[2].getMatriu()[aux + i][j - aux] = - 1;
+						samurai[2].getMatriu()[aux + i][j - aux] = - 1;
 						desmarcatge(aux + i, j - aux, num, 2, marca);
 					}
 					else if (indy == aux && indx == 0) {
-						this.samurai[3].getMatriu()[i - aux][j + aux] = - 1;
+						samurai[3].getMatriu()[i - aux][j + aux] = - 1;
 						desmarcatge(i - aux, aux + j, num, 3, marca);
 					}
 					else if (indy == aux && indx == aux) {
-						this.samurai[4].getMatriu()[i - aux][j - aux] = - 1;
+						samurai[4].getMatriu()[i - aux][j - aux] = - 1;
 						desmarcatge(i - aux, j - aux, num, 4, marca);
 					}
 				}
@@ -419,10 +419,11 @@ public class Samurai {
 	}
 	
 	public boolean[][] passaAFixes() {
-		boolean[][] fixes = new boolean[3 * cas * cas - 2 * cas][3 * cas * cas - 2 * cas];
-		Sudoku sudoku = this.setSudoku();
-		for (int i = 0; i < 3 * cas * cas - 2 * cas; i++) {
-			for (int j = 0; j < 3 * cas * cas - 2 * cas; j++) {
+		int mida = 3 * cas * cas - 2 * cas;
+		boolean[][] fixes = new boolean[mida][mida];
+		Sudoku sudoku = setSudoku();
+		for (int i = 0; i < mida; i++) {
+			for (int j = 0; j < mida; j++) {
 				fixes[i][j] = sudoku.getFixes()[i][j];
 			}
 		}
@@ -430,10 +431,11 @@ public class Samurai {
 	}
 	
 	public int[][] passaAMatriu() {
-		int[][] matriu = new int[3 * cas * cas - 2 * cas][3 * cas * cas - 2 * cas];
+		int mida = 3 * cas * cas - 2 * cas;
+		int[][] matriu = new int[mida][mida];
 		Sudoku sudoku = this.setSudoku();
-		for (int i = 0; i < 3 * cas * cas - 2 * cas; i++) {
-			for (int j = 0; j < 3 * cas * cas - 2 * cas; j++) {
+		for (int i = 0; i < mida; i++) {
+			for (int j = 0; j < mida; j++) {
 				matriu[i][j] = sudoku.getMatriu()[i][j];
 			}
 		}
