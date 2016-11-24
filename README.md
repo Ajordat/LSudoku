@@ -5,7 +5,7 @@ resoldre sudokus de 9x9 i 16x16. També resol sudokus de tipus samurai, que és 
 uns quadrats de 3x3 concrets.
 
 Al directori principal s'inclouen sudokus de sobres per a fer les proves, però en cas de voler fer proves amb altres sudokus només s'ha
-de seguir el seqüent patrò per a que el programa ho pugui interpretar bé:
+de seguir el seqüent patró per a que el programa ho pugui interpretar bé:
 
     Començant per la primera casella, que anirà col·locada a la primera posició de la primera línia, s'ha 
     d'escriure el sudoku separant cada casella amb un espai i escrivint el valor que aquesta conté o un guió 
