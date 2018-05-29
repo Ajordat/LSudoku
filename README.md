@@ -1,7 +1,7 @@
 # Sudoku Solver
 
 This project implements a Sudoku solver of any size (with time and a powerful PC), even if it was originally designed to solve sudokus of 9x9 and 16x16. It also resolves Samurai sudokus, which is a variant consisting of five sudokus that share
-3x3 square squares.
+some 3x3 squares.
 
 The main directory includes many sudokus to do the tests. In case you want to test it with other sudokus, you just have
 to follow the pattern so that the program can interpret it well:
