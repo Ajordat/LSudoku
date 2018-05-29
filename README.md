@@ -1,24 +1,18 @@
 # Sudoku Solver
 
-Aquest projecte implementa un solucionador de Sudokus de qualsevol mida (amb temps i un PC potent), encara que estigui pensat per a 
-resoldre sudokus de 9x9 i 16x16. També resol sudokus de tipus samurai, que és una variant que consta de cinc sudokus que comparteixen
-uns quadrats de 3x3 concrets.
+This project implements a Sudoku solver of any size (with time and a powerful PC), even if it was originally designed to solve sudokus of 9x9 and 16x16. It also resolves Samurai sudokus, which is a variant consisting of five sudokus that share
+3x3 square squares.
 
-Al directori principal s'inclouen sudokus de sobres per a fer les proves, però en cas de voler fer proves amb altres sudokus només s'ha
-de seguir el seqüent patró per a que el programa ho pugui interpretar bé:
+The main directory includes many sudokus to do the tests. In case you want to test it with other sudokus, you just have
+to follow the pattern so that the program can interpret it well:
 
-    Començant per la primera casella, que anirà col·locada a la primera posició de la primera línia, s'ha 
-    d'escriure el sudoku separant cada casella amb un espai i escrivint el valor que aquesta conté o un guió 
-    si no s'especifica. En el cas dels sudokus samurai s'ha d'utilitzar un asterisc per a cada posició on no 
-    hi hagi cap casella (un espai en blanc).
+    Separete each field with a space. Write the numbers the program must know, write a dash for the blank boxes.
+    In the case of Samurai sudokus, an asterisk must be used for each position where isn't a box.
     
-Sé que m'explico malament, així que sentiu-vos lliures de mirar les mostres que hi ha.
+If I haven't explained myself properly, feel free to look at the samples there.
 
 
-Pel que fa al programa _per se_, se li ha d'introduir el nom del fitxer que conté el sudoku a resoldre (i que estigui al directori
-del projecte) i aquest et preguntarà si vols veure el procés de resolució del sudoku. Un cop comprovades totes les possibilitats
-mostra el temps que ha tardat en comprovar les possibilitats (no són tantes, fa servir un algoristme de Backtracking) i el nombre
-de solucions que ha trobat.
+As for the program, you must enter the name of the file containing the sudoku to be resolved and it will ask you if you want to see the sudoku resolution process. Once all the possibilities are checked, it shows how long it took (there are not so many, it uses a Backtracking algorithm) and the number of solutions it has found.
 
 
 
